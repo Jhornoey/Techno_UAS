@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foundra - Event & Workshop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #6d28d9;
+            --secondary: #06d6a0;
+            --accent: #f59e0b;
+            --warning: #ef4444;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            background: var(--surface);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 400px;
+            margin: 0 40px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 48px 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 16px;
+            transition: var(--transition);
+            background: var(--background);
+        }
+
+         /* Footer Navigation */
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .nav-tabs {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 0;
+            text-decoration: none;
+            color: var(--text-light);
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab.active {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--background);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+            transform: translateY(-2px);
+        }
+
+        /* Main Layout */
+        .main-content {
+            padding: 24px 0;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 60px 0;
+            border-radius: var(--radius);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: 32px;
+        }
+
+        /* Calendar Preview */
+        .calendar-section {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .calendar-widget {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .calendar-header {
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 12px;
+            padding: 8px 0;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .calendar-day:hover {
+            background: var(--background);
+        }
+
+        .calendar-day.event {
+            background: var(--primary);
+            color: white;
+        }
+
+        .calendar-day.today {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .calendar-day.other-month {
+            color: var(--text-muted);
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 16px;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 32px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 16px;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .select-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .select-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Category Tabs */
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .category-tab {
+            padding: 12px 24px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .category-tab:hover:not(.active) {
+            background: var(--background);
+            border-color: var(--primary);
+        }
+
+        /* Event Grid */
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 24px;
+        }
+
+        /* Event Card */
+        .event-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .event-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .event-banner {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .event-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--surface);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .event-badge.online {
+            color: var(--secondary);
+        }
+
+        .event-badge.offline {
+            color: var(--primary);
+        }
+
+        .event-badge.workshop {
+            color: var(--accent);
+        }
+
+        .event-content {
+            padding: 20px;
+        }
+
+        .event-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .event-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .event-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .event-tag {
+            background: var(--background);
+            color: var(--text-secondary);
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .event-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .event-quota {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .quota-warning {
+            color: var(--warning);
+        }
+
+        /* 3D Animation Container */
+        .animation-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--surface);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: var(--transition);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 8px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: var(--background);
+            color: var(--text-primary);
+        }
+
+        .modal-content {
+            padding: 0;
+        }
+
+        .modal-banner {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .modal-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: var(--background);
+            border-radius: var(--radius);
+        }
+
+        .modal-section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .benefits-list, .requirements-list {
+            padding-left: 20px;
+        }
+
+        .benefits-list li, .requirements-list li {
+            margin-bottom: 8px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .btn-large {
+            padding: 14px 24px;
+            font-size: 16px;
+        }
+
+        .btn-full {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            grid-column: 1 / -1;
+        }
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--background);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .empty-description {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        /* Loading State */
+        .loading-state {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            grid-column: 1 / -1;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .event-grid {
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .search-container {
+                margin: 0;
+                max-width: 100%;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 18px;
+            }
+            
+            .event-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-row {
+                flex-direction: column;
+            }
+            
+            .modal-meta {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-actions {
+                flex-direction: column;
+            }
+            
+            .btn-full {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Animation Background -->
+    <div class="animation-container" id="animationContainer"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href = "homepage.html" class="logo">
+                    <i class="logo-icon">F</i>
+                    Foundra
+                </a>
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Cari event, workshop, atau topik...">
+                    <div class="search-icon">
+                        <i data-lucide="search"></i>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary">
+                        <i data-lucide="calendar"></i>
+                        Kalender Saya
+                    </button>
+                    <button class="btn btn-primary">
+                        <i data-lucide="plus"></i>
+                        Buat Event
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="main-content">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="hero-content">
+                    <h1 class="hero-title">Tingkatkan Skill Bisnis Anda</h1>
+                    <p class="hero-subtitle">Temukan workshop, seminar, dan event networking terbaik untuk mengembangkan startup Anda</p>
+                    <button class="btn btn-primary btn-large">
+                        <i data-lucide="rocket"></i>
+                        Jelajahi Event Terpopuler
+                    </button>
+                </div>
+            </section>
+
+            <!-- Calendar Preview -->
+            <section class="calendar-section">
+                <h2 class="section-title">
+                    <i data-lucide="calendar"></i>
+                    Kalender Event
+                </h2>
+                <div class="calendar-widget" id="calendarWidget">
+                    <!-- Calendar will be dynamically generated -->
+                </div>
+                <div class="calendar-nav">
+                    <button class="btn btn-secondary" id="prevMonth">
+                        <i data-lucide="chevron-left"></i>
+                        Bulan Sebelumnya
+                    </button>
+                    <span id="currentMonth" style="font-weight: 600;"></span>
+                    <button class="btn btn-secondary" id="nextMonth">
+                        Bulan Berikutnya
+                        <i data-lucide="chevron-right"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Filter Section -->
+            <section class="filter-section">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label class="filter-label">Filter Tanggal</label>
+                        <select class="select-input" id="dateFilter">
+                            <option value="">Semua Tanggal</option>
+                            <option value="today">Hari Ini</option>
+                            <option value="week">Minggu Ini</option>
+                            <option value="month">Bulan Ini</option>
+                            <option value="upcoming">Akan Datang</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Kategori</label>
+                        <select class="select-input" id="categoryFilter">
+                            <option value="">Semua Kategori</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="funding">Funding</option>
+                            <option value="umkm">UMKM</option>
+                            <option value="tech">Technology</option>
+                            <option value="leadership">Leadership</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Tipe Event</label>
+                        <select class="select-input" id="typeFilter">
+                            <option value="">Semua Tipe</option>
+                            <option value="online">Online</option>
+                            <option value="offline">Offline</option>
+                            <option value="hybrid">Hybrid</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-secondary" id="resetFilters">
+                        <i data-lucide="refresh-cw"></i>
+                        Reset Filter
+                    </button>
+                </div>
+            </section>
+
+            <!-- Category Tabs -->
+            <div class="category-tabs">
+                <div class="category-tab active" data-category="all">
+                    <i data-lucide="grid"></i>
+                    Semua Event
+                </div>
+                <div class="category-tab" data-category="online">
+                    <i data-lucide="wifi"></i>
+                    Online
+                </div>
+                <div class="category-tab" data-category="offline">
+                    <i data-lucide="map-pin"></i>
+                    Offline
+                </div>
+                <div class="category-tab" data-category="webinar">
+                    <i data-lucide="video"></i>
+                    Webinar
+                </div>
+                <div class="category-tab" data-category="workshop">
+                    <i data-lucide="settings"></i>
+                    Workshop
+                </div>
+                <div class="category-tab" data-category="seminar">
+                    <i data-lucide="users"></i>
+                    Seminar
+                </div>
+            </div>
+
+            <!-- Event Grid -->
+            <section class="event-grid" id="eventGrid">
+                <!-- Event cards will be dynamically inserted here -->
+            </section>
+        </div>
+    </main>
+
+    <!-- Event Detail Modal -->
+    <div class="modal-overlay" id="eventModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Detail Event</h2>
+                <button class="modal-close" id="modalClose">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-content" id="modalContent">
+                <!-- Modal content will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+     <!-- Footer Navigation -->
+    <div class="footer-nav">
+        <div class="nav-tabs">
+            <a href="homepage.html" class="nav-tab">
+                <i class="fas fa-home nav-icon"></i>
+                <span>Home</span> 
+            </a>
+            <a href="forum.html" class="nav-tab">
+                <i class="fas fa-users nav-icon"></i>
+                <span>Forum</span>
+            </a>
+            <a href="partner.html" class="nav-tab">
+                <i class="fas fa-handshake nav-icon"></i>
+                <span>Partner</span>
+            </a>
+            <a href="event.html" class="nav-tab active">
+                <i class="fas fa-calendar-alt nav-icon"></i>
+                <span>Event</span>
+            </a>
+            <a href="profile.html" class="nav-tab">
+                <i class="fas fa-user nav-icon"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Sample data for events
+        const events = [
+            {
+                id: 1,
+                title: "Workshop Digital Marketing untuk Startup",
+                type: "workshop",
+                mode: "online",
+                banner: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=300&fit=crop",
+                speaker: "Sarah Chen - Head of Marketing Tokopedia",
+                date: "2024-12-15",
+                time: "14:00 - 16:00 WIB",
+                location: "Zoom Meeting",
+                quota: 45,
+                maxQuota: 50,
+                category: ["marketing", "umkm"],
+                description: "Workshop intensif tentang strategi digital marketing untuk startup dan UMKM. Pelajari cara membangun brand presence yang kuat di era digital.",
+                benefits: [
+                    "Memahami fundamental digital marketing",
+                    "Strategi content marketing yang efektif",
+                    "Teknik SEO dan SEM untuk startup",
+                    "Case study sukses dari brand lokal"
+                ],
+                requirements: [
+                    "Laptop dengan koneksi internet stabil",
+                    "Akun Google Analytics (jika ada)",
+                    "Notion atau alat notes digital"
+                ],
+                organizer: "Foundra Community",
+                price: "Gratis"
+            },
+            {
+                id: 2,
+                title: "Funding Strategy: Dari Bootstrapping ke Series A",
+                type: "seminar",
+                mode: "offline",
+                banner: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=600&h=300&fit=crop",
+                speaker: "Budi Santoso - Partner Alpha Ventures",
+                date: "2024-12-18",
+                time: "09:00 - 12:00 WIB",
+                location: "Coworking Space Sudirman, Jakarta",
+                quota: 28,
+                maxQuota: 30,
+                category: ["funding", "leadership"],
+                description: "Seminar komprehensif tentang strategi funding untuk startup dari tahap awal hingga series A. Dibawakan oleh praktisi venture capital terkemuka.",
+                benefits: [
+                    "Memahami jenis funding yang tersedia",
+                    "Menyusun pitch deck yang menarik",
+                    "Teknik valuation startup",
+                    "Networking dengan investor"
+                ],
+                requirements: [
+                    "Business plan atau pitch deck (opsional)",
+                    "Open mind untuk feedback"
+                ],
+                organizer: "Alpha Ventures",
+                price: "Rp 250.000"
+            },
+            {
+                id: 3,
+                title: "Build MVP dengan No-Code Tools",
+                type: "workshop",
+                mode: "hybrid",
+                banner: "https://images.unsplash.com/photo-1555099962-4199c345e5dd?w=600&h=300&fit=crop",
+                speaker: "Rizky Pratama - No-Code Expert",
+                date: "2024-12-20",
+                time: "13:00 - 17:00 WIB",
+                location: "Online & Offline (Tech Hub Bali)",
+                quota: 18,
+                maxQuota: 25,
+                category: ["tech", "umkm"],
+                description: "Workshop hands-on membangun Minimum Viable Product menggunakan tools no-code seperti Bubble, Webflow, dan Adalo.",
+                benefits: [
+                    "Membangun MVP tanpa coding",
+                    "Memahami ecosystem no-code",
+                    "Testing product dengan user",
+                    "Menghemat development cost"
+                ],
+                requirements: [
+                    "Laptop dengan browser modern",
+                    "Akun gratis di platform no-code",
+                    "Ide produk yang ingin dibangun"
+                ],
+                organizer: "No-Code Indonesia",
+                price: "Gratis"
+            },
+            {
+                id: 4,
+                title: "Scaling UMKM dengan E-commerce",
+                type: "webinar",
+                mode: "online",
+                banner: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&h=300&fit=crop",
+                speaker: "Maya Sari - E-commerce Consultant",
+                date: "2024-12-22",
+                time: "10:00 - 11:30 WIB",
+                location: "Google Meet",
+                quota: 95,
+                maxQuota: 100,
+                category: ["umkm", "marketing"],
+                description: "Webinar tentang strategi scaling bisnis UMKM melalui platform e-commerce dan marketplace.",
+                benefits: [
+                    "Optimasi listing produk",
+                    "Strategi pricing yang kompetitif",
+                    "Customer service excellence",
+                    "Loyalty program design"
+                ],
+                requirements: [
+                    "Koneksi internet stabil",
+                    "Pengalaman dasar e-commerce"
+                ],
+                organizer: "UMKM Digital",
+                price: "Gratis"
+            },
+            {
+                id: 5,
+                title: "AI untuk Business Automation",
+                type: "workshop",
+                mode: "online",
+                banner: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=300&fit=crop",
+                speaker: "Dr. Ahmad Rizki - AI Researcher",
+                date: "2024-12-25",
+                time: "19:00 - 21:00 WIB",
+                location: "Zoom Meeting",
+                quota: 32,
+                maxQuota: 40,
+                category: ["tech", "leadership"],
+                description: "Workshop implementasi AI dan automation tools untuk meningkatkan efisiensi operasional bisnis.",
+                benefits: [
+                    "Automation workflow design",
+                    "AI tools untuk content creation",
+                    "Data analysis dengan AI",
+                    "Integration best practices"
+                ],
+                requirements: [
+                    "Laptop dengan akses internet",
+                    "Akun ChatGPT/Claude",
+                    "Basic understanding of business processes"
+                ],
+                organizer: "Tech Innovation Hub",
+                price: "Rp 150.000"
+            },
+            {
+                id: 6,
+                title: "Networking Night: Founder Circle",
+                type: "seminar",
+                mode: "offline",
+                banner: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&h=300&fit=crop",
+                speaker: "Various Industry Leaders",
+                date: "2024-12-28",
+                time: "18:00 - 21:00 WIB",
+                location: "Roof Top Bar SCBD, Jakarta",
+                quota: 48,
+                maxQuota: 50,
+                category: ["leadership", "networking"],
+                description: "Exclusive networking event untuk founder dan entrepreneur untuk berbagi pengalaman dan membangun koneksi.",
+                benefits: [
+                    "Networking dengan founder sukses",
+                    "Sharing session experience",
+                    "Potential partnership opportunities",
+                    "Mentorship access"
+                ],
+                requirements: [
+                    "Business card",
+                    "Open attitude untuk networking",
+                    "Startup profile (opsional)"
+                ],
+                organizer: "Founder Institute Indonesia",
+                price: "Rp 200.000"
+            }
+        ];
+
+        // DOM Elements
+        const eventGrid = document.getElementById('eventGrid');
+        const eventModal = document.getElementById('eventModal');
+        const modalClose = document.getElementById('modalClose');
+        const modalContent = document.getElementById('modalContent');
+        const searchInput = document.querySelector('.search-input');
+        const categoryTabs = document.querySelectorAll('.category-tab');
+        const calendarWidget = document.getElementById('calendarWidget');
+        const currentMonthElement = document.getElementById('currentMonth');
+        const prevMonthBtn = document.getElementById('prevMonth');
+        const nextMonthBtn = document.getElementById('nextMonth');
+
+        // Filter state
+        let filters = {
+            category: 'all',
+            date: '',
+            type: '',
+            search: ''
+        };
+
+        // Calendar state
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+
+        // Initialize 3D animation
+        function init3DAnimation() {
+            const container = document.getElementById('animationContainer');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+
+            // Create floating particles
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 100;
+            const posArray = new Float32Array(particlesCount * 3);
+
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 100;
+            }
+
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.5,
+                color: 0x7c3aed,
+                transparent: true,
+                opacity: 0.6
+            });
+
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+
+            camera.position.z = 50;
+
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+
+                particlesMesh.rotation.x += 0.001;
+                particlesMesh.rotation.y += 0.002;
+
+                renderer.render(scene, camera);
+            }
+
+            animate();
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        // Generate calendar
+        function generateCalendar() {
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const firstDayIndex = firstDay.getDay();
+            const lastDayIndex = lastDay.getDay();
+            const lastDate = lastDay.getDate();
+            const prevLastDate = new Date(currentYear, currentMonth, 0).getDate();
+
+            const months = [
+                "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+            ];
+
+            currentMonthElement.textContent = `${months[currentMonth]} ${currentYear}`;
+
+            let days = '';
+
+            // Previous month days
+            for (let i = firstDayIndex; i > 0; i--) {
+                days += `<div class="calendar-day other-month">${prevLastDate - i + 1}</div>`;
+            }
+
+            // Current month days
+            for (let i = 1; i <= lastDate; i++) {
+                const hasEvent = events.some(event => {
+                    const eventDate = new Date(event.date);
+                    return eventDate.getDate() === i && 
+                           eventDate.getMonth() === currentMonth && 
+                           eventDate.getFullYear() === currentYear;
+                });
+
+                const isToday = i === currentDate.getDate() && 
+                               currentMonth === currentDate.getMonth() && 
+                               currentYear === currentDate.getFullYear();
+
+                let dayClass = 'calendar-day';
+                if (isToday) dayClass += ' today';
+                if (hasEvent) dayClass += ' event';
+
+                days += `<div class="${dayClass}">${i}</div>`;
+            }
+
+            // Next month days
+            for (let i = lastDayIndex; i < 6; i++) {
+                days += `<div class="calendar-day other-month">${i - lastDayIndex + 1}</div>`;
+            }
+
+            calendarWidget.innerHTML = `
+                <div class="calendar-header">Min</div>
+                <div class="calendar-header">Sen</div>
+                <div class="calendar-header">Sel</div>
+                <div class="calendar-header">Rab</div>
+                <div class="calendar-header">Kam</div>
+                <div class="calendar-header">Jum</div>
+                <div class="calendar-header">Sab</div>
+                ${days}
+            `;
+        }
+
+        // Render event cards
+        function renderEvents(eventsToRender) {
+            eventGrid.innerHTML = '';
+
+            if (eventsToRender.length === 0) {
+                eventGrid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i data-lucide="calendar-x"></i>
+                        </div>
+                        <h3 class="empty-title">Tidak ada event yang ditemukan</h3>
+                        <p class="empty-description">Coba ubah filter pencarian atau kategori untuk melihat lebih banyak event.</p>
+                        <button class="btn btn-primary" onclick="clearFilters()">
+                            <i data-lucide="refresh-cw"></i>
+                            Tampilkan Semua Event
+                        </button>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            eventsToRender.forEach(event => {
+                const quotaPercentage = (event.quota / event.maxQuota) * 100;
+                const isAlmostFull = quotaPercentage >= 80;
+                const isFull = event.quota >= event.maxQuota;
+
+                const card = document.createElement('div');
+                card.className = 'event-card';
+                card.innerHTML = `
+                    <img src="${event.banner}" alt="${event.title}" class="event-banner">
+                    <div class="event-badge ${event.mode}">
+                        <i data-lucide="${event.mode === 'online' ? 'wifi' : event.mode === 'offline' ? 'map-pin' : 'cast'}"></i>
+                        ${event.mode === 'online' ? 'Online' : event.mode === 'offline' ? 'Offline' : 'Hybrid'}
+                    </div>
+                    <div class="event-content">
+                        <h3 class="event-title">${event.title}</h3>
+                        <div class="event-meta">
+                            <div class="meta-item">
+                                <i data-lucide="user"></i>
+                                ${event.speaker}
+                            </div>
+                            <div class="meta-item">
+                                <i data-lucide="calendar"></i>
+                                ${formatDate(event.date)} • ${event.time}
+                            </div>
+                            <div class="meta-item">
+                                <i data-lucide="map-pin"></i>
+                                ${event.location}
+                            </div>
+                        </div>
+                        <div class="event-tags">
+                            ${event.category.map(cat => `<span class="event-tag">${cat}</span>`).join('')}
+                            <span class="event-tag">${event.type}</span>
+                        </div>
+                        <div class="event-footer">
+                            <div class="event-quota ${isAlmostFull ? 'quota-warning' : ''}">
+                                ${isFull ? '🟢 Penuh' : `🎫 ${event.quota}/${event.maxQuota} tersisa`}
+                            </div>
+                            <button class="btn btn-primary" onclick="showEventDetail(${event.id})" ${isFull ? 'disabled' : ''}>
+                                <i data-lucide="calendar-plus"></i>
+                                ${isFull ? 'Event Penuh' : 'Daftar Event'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                eventGrid.appendChild(card);
+            });
+
+            lucide.createIcons();
+        }
+        
+
+        // Show event detail modal
+        function showEventDetail(eventId) {
+            const event = events.find(e => e.id === eventId);
+            if (!event) return;
+
+            modalContent.innerHTML = `
+                <img src="${event.banner}" alt="${event.title}" class="modal-banner">
+                <div class="modal-body">
+                    <h1 class="modal-title">${event.title}</h1>
+                    
+                    <div class="modal-meta">
+                        <div>
+                            <strong>Pembicara</strong>
+                            <div>${event.speaker}</div>
+                        </div>
+                        <div>
+                            <strong>Tanggal & Waktu</strong>
+                            <div>${formatDate(event.date)} • ${event.time}</div>
+                        </div>
+                        <div>
+                            <strong>Lokasi</strong>
+                            <div>${event.location}</div>
+                        </div>
+                        <div>
+                            <strong>Penyelenggara</strong>
+                            <div>${event.organizer}</div>
+                        </div>
+                        <div>
+                            <strong>Biaya</strong>
+                            <div>${event.price}</div>
+                        </div>
+                        <div>
+                            <strong>Kuota</strong>
+                            <div>${event.quota}/${event.maxQuota} peserta</div>
+                        </div>
+                    </div>
+
+                    <div class="modal-section">
+                        <h3 class="section-title">
+                            <i data-lucide="file-text"></i>
+                            Deskripsi Event
+                        </h3>
+                        <p>${event.description}</p>
+                    </div>
+
+                    <div class="modal-section">
+                        <h3 class="section-title">
+                            <i data-lucide="award"></i>
+                            Benefit Mengikuti
+                        </h3>
+                        <ul class="benefits-list">
+                            ${event.benefits.map(benefit => `<li>${benefit}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="modal-section">
+                        <h3 class="section-title">
+                            <i data-lucide="tool"></i>
+                            Yang Perlu Dipersiapkan
+                        </h3>
+                        <ul class="requirements-list">
+                            ${event.requirements.map(req => `<li>${req}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button class="btn btn-primary btn-large btn-full" onclick="registerForEvent(${event.id})">
+                            <i data-lucide="calendar-plus"></i>
+                            Daftar Event Ini
+                        </button>
+                        <button class="btn btn-secondary btn-large" onclick="saveToCalendar(${event.id})">
+                            <i data-lucide="download"></i>
+                            Simpan ke Kalender
+                        </button>
+                        <button class="btn btn-secondary" onclick="closeModal()">
+                            <i data-lucide="x"></i>
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            eventModal.classList.add('active');
+            lucide.createIcons();
+        }
+
+        
+        // Register for event
+        function registerForEvent(eventId) {
+            const event = events.find(e => e.id === eventId);
+            if (event.quota >= event.maxQuota) {
+                alert('Maaf, event ini sudah penuh!');
+                return;
+            }
+            alert(`Berhasil mendaftar untuk event: ${event.title}`);
+            // In real app, this would make an API call
+        }
+
+        // Save to calendar
+        function saveToCalendar(eventId) {
+            const event = events.find(e => e.id === eventId);
+            alert(`Event "${event.title}" telah disimpan ke kalender Anda`);
+            // In real app, this would generate .ics file or integrate with calendar APIs
+        }
+
+        // Close modal
+        function closeModal() {
+            eventModal.classList.remove('active');
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('id-ID', options);
+        }
+
+        // Filter events based on current filters
+        function filterEvents() {
+            let filtered = events.filter(event => {
+                // Category filter
+                if (filters.category !== 'all' && event.type !== filters.category) {
+                    return false;
+                }
+
+                // Type filter
+                if (filters.type && event.mode !== filters.type) {
+                    return false;
+                }
+
+                // Date filter
+                if (filters.date) {
+                    const eventDate = new Date(event.date);
+                    const today = new Date();
+                    
+                    switch (filters.date) {
+                        case 'today':
+                            if (eventDate.toDateString() !== today.toDateString()) return false;
+                            break;
+                        case 'week':
+                            const weekLater = new Date(today);
+                            weekLater.setDate(today.getDate() + 7);
+                            if (eventDate < today || eventDate > weekLater) return false;
+                            break;
+                        case 'month':
+                            if (eventDate.getMonth() !== today.getMonth() || eventDate.getFullYear() !== today.getFullYear()) return false;
+                            break;
+                        case 'upcoming':
+                            if (eventDate < today) return false;
+                            break;
+                    }
+                }
+
+                // Search filter
+                if (filters.search) {
+                    const searchTerm = filters.search.toLowerCase();
+                    if (!event.title.toLowerCase().includes(searchTerm) &&
+                        !event.speaker.toLowerCase().includes(searchTerm) &&
+                        !event.description.toLowerCase().includes(searchTerm) &&
+                        !event.category.some(cat => cat.toLowerCase().includes(searchTerm))) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+
+            renderEvents(filtered);
+        }
+
+        // Clear all filters
+        function clearFilters() {
+            filters = {
+                category: 'all',
+                date: '',
+                type: '',
+                search: ''
+            };
+
+            // Reset UI
+            categoryTabs.forEach(tab => {
+                if (tab.dataset.category === 'all') {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            document.getElementById('dateFilter').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('typeFilter').value = '';
+            searchInput.value = '';
+
+            renderEvents(events);
+        }
+
+        // Initialize event listeners
+        function initEventListeners() {
+            // Modal close
+            modalClose.addEventListener('click', closeModal);
+            eventModal.addEventListener('click', (e) => {
+                if (e.target === eventModal) closeModal();
+            });
+
+            // Search input
+            searchInput.addEventListener('input', (e) => {
+                filters.search = e.target.value;
+                filterEvents();
+            });
+
+            // Category tabs
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    filters.category = tab.dataset.category;
+                    filterEvents();
+                });
+            });
+
+            // Filter selects
+            document.getElementById('dateFilter').addEventListener('change', (e) => {
+                filters.date = e.target.value;
+                filterEvents();
+            });
+
+            document.getElementById('categoryFilter').addEventListener('change', (e) => {
+                filters.type = e.target.value;
+                filterEvents();
+            });
+
+            document.getElementById('typeFilter').addEventListener('change', (e) => {
+                filters.type = e.target.value;
+                filterEvents();
+            });
+
+            // Reset filters
+            document.getElementById('resetFilters').addEventListener('click', clearFilters);
+
+            // Calendar navigation
+            prevMonthBtn.addEventListener('click', () => {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                generateCalendar();
+            });
+
+            nextMonthBtn.addEventListener('click', () => {
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                generateCalendar();
+            });
+        }
+
+        // Initialize the application
+        function init() {
+            init3DAnimation();
+            initEventListeners();
+            generateCalendar();
+            renderEvents(events);
+        }
+
+        // Start the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

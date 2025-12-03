@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foundra - Cari Partner Bisnis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #6d28d9;
+            --secondary: #06d6a0;
+            --accent: #f59e0b;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            background: var(--surface);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 40px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 48px 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 16px;
+            transition: var(--transition);
+            background: var(--background);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .filter-toggle {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+ /* Footer Navigation */
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .nav-tabs {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 0;
+            text-decoration: none;
+            color: var(--text-light);
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab.active {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+
+        .filter-toggle:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Main Layout */
+        .main-content {
+            display: flex;
+            gap: 24px;
+            padding: 24px 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Filter Panel */
+        .filter-panel {
+            width: 320px;
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .filter-section {
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+
+        .filter-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .filter-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .checkbox.checked {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+        }
+
+        .select-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .select-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .tag {
+            background: var(--background);
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .tag.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Partner Grid */
+        .partner-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+        }
+
+        /* Partner Card */
+        .partner-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .partner-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .partner-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--border);
+        }
+
+        .partner-info {
+            flex: 1;
+        }
+
+        .partner-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .partner-role {
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .partner-bio {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .skill-tag {
+            background: rgba(124, 58, 237, 0.1);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .card-details {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--background);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+            transform: translateY(-2px);
+        }
+
+        /* 3D Animation Container */
+        .animation-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--surface);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: var(--transition);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 8px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: var(--background);
+            color: var(--text-primary);
+        }
+
+        .modal-content {
+            padding: 24px;
+        }
+
+        .modal-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 16px;
+            border: 4px solid var(--border);
+        }
+
+        .modal-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .modal-role {
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            grid-column: 1 / -1;
+        }
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--background);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .empty-description {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        /* Loading State */
+        .loading-state {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            grid-column: 1 / -1;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .filter-panel {
+                width: 100%;
+                position: static;
+            }
+            
+            .partner-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .search-container {
+                margin: 0;
+                max-width: 100%;
+            }
+            
+            .partner-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Animation Background -->
+    <div class="animation-container" id="animationContainer"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="homepage.html" class="logo">
+                    <i class="logo-icon">F</i>
+                    Foundra
+                </a>
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Cari partner berdasarkan skill, nama, atau minat...">
+                    <div class="search-icon">
+                        <i data-lucide="search"></i>
+                    </div>
+                </div>
+                <button class="filter-toggle" id="filterToggle">
+                    <i data-lucide="filter"></i>
+                    Filter
+                </button>
+            </div>
+        </div>
+    </header>
+        <!-- Footer Navigation -->
+    <div class="footer-nav">
+        <div class="nav-tabs">
+            <a href="homepage.html" class="nav-tab">
+                <i class="fas fa-home nav-icon"></i>
+                <span>Home</span> 
+            </a>
+            <a href="forum.html" class="nav-tab">
+                <i class="fas fa-users nav-icon"></i>
+                <span>Forum</span>
+            </a>
+            <a href="partner.html" class="nav-tab active">
+                <i class="fas fa-handshake nav-icon"></i>
+                <span>Partner</span>
+            </a>
+            <a href="event.html" class="nav-tab">
+                <i class="fas fa-calendar-alt nav-icon"></i>
+                <span>Event</span>
+            </a>
+            <a href="profile.html" class="nav-tab">
+                <i class="fas fa-user nav-icon"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="main-content">
+            <!-- Filter Panel -->
+            <aside class="filter-panel" id="filterPanel">
+                <div class="filter-section">
+                    <h3 class="filter-title">
+                        <i data-lucide="award"></i>
+                        Skill
+                    </h3>
+                    <div class="filter-options">
+                        <div class="checkbox-group" data-skill="designer">
+                            <div class="checkbox"></div>
+                            <span>Designer</span>
+                        </div>
+                        <div class="checkbox-group" data-skill="marketing">
+                            <div class="checkbox"></div>
+                            <span>Marketing</span>
+                        </div>
+                        <div class="checkbox-group" data-skill="finance">
+                            <div class="checkbox"></div>
+                            <span>Finance</span>
+                        </div>
+                        <div class="checkbox-group" data-skill="developer">
+                            <div class="checkbox"></div>
+                            <span>Developer</span>
+                        </div>
+                        <div class="checkbox-group" data-skill="business">
+                            <div class="checkbox"></div>
+                            <span>Business Strategist</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3 class="filter-title">
+                        <i data-lucide="map-pin"></i>
+                        Lokasi
+                    </h3>
+                    <select class="select-input" id="locationFilter">
+                        <option value="">Semua Lokasi</option>
+                        <option value="jakarta">Jakarta</option>
+                        <option value="bandung">Bandung</option>
+                        <option value="surabaya">Surabaya</option>
+                        <option value="bali">Bali</option>
+                        <option value="yogyakarta">Yogyakarta</option>
+                    </select>
+                </div>
+
+                <div class="filter-section">
+                    <h3 class="filter-title">
+                        <i data-lucide="briefcase"></i>
+                        Minat Bisnis
+                    </h3>
+                    <div class="tag-container">
+                        <div class="tag" data-interest="fashion">Fashion</div>
+                        <div class="tag" data-interest="tech">Tech</div>
+                        <div class="tag" data-interest="f&b">F&B</div>
+                        <div class="tag" data-interest="umkm">UMKM</div>
+                        <div class="tag" data-interest="agritech">Agritech</div>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3 class="filter-title">
+                        <i data-lucide="user"></i>
+                        Status
+                    </h3>
+                    <div class="filter-options">
+                        <div class="checkbox-group" data-role="founder">
+                            <div class="checkbox"></div>
+                            <span>Founder</span>
+                        </div>
+                        <div class="checkbox-group" data-role="cofounder">
+                            <div class="checkbox"></div>
+                            <span>Co-Founder</span>
+                        </div>
+                        <div class="checkbox-group" data-role="mentor">
+                            <div class="checkbox"></div>
+                            <span>Mentor</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3 class="filter-title">
+                        <i data-lucide="star"></i>
+                        Experience Level
+                    </h3>
+                    <div class="filter-options">
+                        <div class="checkbox-group" data-experience="junior">
+                            <div class="checkbox"></div>
+                            <span>Junior (1-3 tahun)</span>
+                        </div>
+                        <div class="checkbox-group" data-experience="mid">
+                            <div class="checkbox"></div>
+                            <span>Mid (3-7 tahun)</span>
+                        </div>
+                        <div class="checkbox-group" data-experience="senior">
+                            <div class="checkbox"></div>
+                            <span>Senior (7+ tahun)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3 class="filter-title">
+                        <i data-lucide="clock"></i>
+                        Availability
+                    </h3>
+                    <div class="filter-options">
+                        <div class="checkbox-group" data-availability="fulltime">
+                            <div class="checkbox"></div>
+                            <span>Full-time</span>
+                        </div>
+                        <div class="checkbox-group" data-availability="parttime">
+                            <div class="checkbox"></div>
+                            <span>Part-time</span>
+                        </div>
+                        <div class="checkbox-group" data-availability="collab">
+                            <div class="checkbox"></div>
+                            <span>Collaboration Only</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Partner Grid -->
+            <section class="partner-grid" id="partnerGrid">
+                <!-- Partner cards will be dynamically inserted here -->
+            </section>
+        </div>
+    </main>
+
+    <!-- Partner Detail Modal -->
+    <div class="modal-overlay" id="partnerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Detail Partner</h2>
+                <button class="modal-close" id="modalClose">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-content" id="modalContent">
+                <!-- Modal content will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Sample data for partners
+        const partners = [
+            {
+                id: 1,
+                name: "Sarah Chen",
+                role: "Founder",
+                avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+                skills: ["UI/UX Design", "Product Strategy", "User Research"],
+                bio: "Product designer dengan pengalaman 5+ tahun di startup tech. Passionate tentang creating meaningful digital experiences.",
+                location: "Jakarta",
+                businessInterests: ["Tech", "F&B"],
+                experience: "Senior",
+                availability: "Full-time",
+                portfolio: "https://sarahchen.design",
+                experienceSummary: "5+ tahun experience di product design. Pernah bekerja di Gojek dan Tokopedia. Spesialisasi di mobile app design dan design system.",
+                projects: ["E-commerce Platform Redesign", "Fintech Mobile App", "HealthTech Dashboard"]
+            },
+            {
+                id: 2,
+                name: "Ahmad Rizki",
+                role: "Co-Founder",
+                avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+                skills: ["Full-stack Development", "System Architecture", "DevOps"],
+                bio: "Full-stack developer specialized in React, Node.js, dan cloud infrastructure. Built scalable systems for multiple startups.",
+                location: "Bandung",
+                businessInterests: ["Tech", "Agritech"],
+                experience: "Senior",
+                availability: "Part-time",
+                portfolio: "https://ahmadrizki.dev",
+                experienceSummary: "8+ tahun di software development. Expertise di React, Node.js, AWS. Pernah lead technical team di unicorn startup.",
+                projects: ["Scalable E-commerce Platform", "Real-time Analytics System", "Mobile Payment Gateway"]
+            },
+            {
+                id: 3,
+                name: "Maya Sari",
+                role: "Mentor",
+                avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+                skills: ["Digital Marketing", "Growth Strategy", "Brand Development"],
+                bio: "Growth marketing expert dengan track record meningkatkan user acquisition 300%+ untuk berbagai startup.",
+                location: "Jakarta",
+                businessInterests: ["Fashion", "Tech"],
+                experience: "Senior",
+                availability: "Collaboration Only",
+                experienceSummary: "10+ tahun di digital marketing dan growth. Pernah jadi Head of Marketing di e-commerce unicorn. Specialist di performance marketing dan brand building.",
+                projects: ["Social Media Campaign 1M+ Users", "Influencer Marketing Program", "Brand Launch Strategy"]
+            },
+            {
+                id: 4,
+                name: "Budi Santoso",
+                role: "Founder",
+                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+                skills: ["Business Strategy", "Fundraising", "Operations"],
+                bio: "Serial entrepreneur dengan 3 successful exits. Focus di building sustainable business models dan team development.",
+                location: "Surabaya",
+                businessInterests: ["UMKM", "F&B"],
+                experience: "Senior",
+                availability: "Full-time",
+                experienceSummary: "15+ tahun entrepreneurial experience. Founded 5 companies dengan 3 successful exits. Expert di business strategy dan fundraising.",
+                projects: ["Food Delivery Startup", "Retail Tech Platform", "SaaS B2B Solution"]
+            },
+            {
+                id: 5,
+                name: "Dewi Anggraini",
+                role: "Co-Founder",
+                avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
+                skills: ["Finance", "Investment", "Financial Modeling"],
+                bio: "Finance professional dengan background investment banking. Specialist di financial planning dan fundraising strategy.",
+                location: "Jakarta",
+                businessInterests: ["Tech", "Finance"],
+                experience: "Mid",
+                availability: "Part-time",
+                experienceSummary: "6+ tahun di finance dan investment. Ex-investment banker dengan expertise di financial modeling dan fundraising. Managed $50M+ investment portfolio.",
+                projects: ["Financial Model for Series B", "Investment Due Diligence", "Portfolio Management System"]
+            },
+            {
+                id: 6,
+                name: "Rizky Pratama",
+                role: "Designer",
+                avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
+                skills: ["Graphic Design", "Brand Identity", "Motion Design"],
+                bio: "Creative designer dengan passion untuk brand storytelling melalui visual design dan motion graphics.",
+                location: "Yogyakarta",
+                businessInterests: ["Fashion", "Creative"],
+                experience: "Junior",
+                availability: "Full-time",
+                portfolio: "https://rizkypratama.design",
+                experienceSummary: "3+ tahun di graphic dan motion design. Strong portfolio di brand identity dan digital marketing assets. Fast learner dan creative problem solver.",
+                projects: ["Brand Identity for Fashion Startup", "Social Media Motion Graphics", "Product Packaging Design"]
+            }
+        ];
+
+        // DOM Elements
+        const partnerGrid = document.getElementById('partnerGrid');
+        const filterToggle = document.getElementById('filterToggle');
+        const filterPanel = document.getElementById('filterPanel');
+        const partnerModal = document.getElementById('partnerModal');
+        const modalClose = document.getElementById('modalClose');
+        const modalContent = document.getElementById('modalContent');
+        const searchInput = document.querySelector('.search-input');
+
+        // Filter state
+        let filters = {
+            skills: [],
+            location: '',
+            interests: [],
+            roles: [],
+            experience: [],
+            availability: []
+        };
+
+        // Initialize 3D animation
+        function init3DAnimation() {
+            const container = document.getElementById('animationContainer');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+
+            // Create floating geometric shapes
+            const geometries = [
+                new THREE.TetrahedronGeometry(15, 0),
+                new THREE.OctahedronGeometry(12, 0),
+                new THREE.IcosahedronGeometry(10, 0)
+            ];
+
+            const materials = [
+                new THREE.MeshBasicMaterial({ color: 0x7c3aed, wireframe: true }),
+                new THREE.MeshBasicMaterial({ color: 0x06d6a0, wireframe: true }),
+                new THREE.MeshBasicMaterial({ color: 0xf59e0b, wireframe: true })
+            ];
+
+            const shapes = [];
+
+            geometries.forEach((geometry, index) => {
+                const material = materials[index];
+                const mesh = new THREE.Mesh(geometry, material);
+                
+                // Random position
+                mesh.position.x = Math.random() * 100 - 50;
+                mesh.position.y = Math.random() * 100 - 50;
+                mesh.position.z = Math.random() * 50 - 100;
+                
+                // Random rotation speed
+                mesh.userData = {
+                    rotationSpeed: {
+                        x: Math.random() * 0.02 - 0.01,
+                        y: Math.random() * 0.02 - 0.01,
+                        z: Math.random() * 0.02 - 0.01
+                    },
+                    floatSpeed: Math.random() * 0.02 + 0.01
+                };
+                
+                scene.add(mesh);
+                shapes.push(mesh);
+            });
+
+            camera.position.z = 50;
+
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+
+                shapes.forEach(shape => {
+                    shape.rotation.x += shape.userData.rotationSpeed.x;
+                    shape.rotation.y += shape.userData.rotationSpeed.y;
+                    shape.rotation.z += shape.userData.rotationSpeed.z;
+                    
+                    // Floating animation
+                    shape.position.y += Math.sin(Date.now() * 0.001 * shape.userData.floatSpeed) * 0.1;
+                });
+
+                renderer.render(scene, camera);
+            }
+
+            animate();
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        // Render partner cards
+        function renderPartners(partnersToRender) {
+            partnerGrid.innerHTML = '';
+
+            if (partnersToRender.length === 0) {
+                partnerGrid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <h3 class="empty-title">Tidak ditemukan partner yang cocok</h3>
+                        <p class="empty-description">Coba ubah filter pencarian Anda atau gunakan kata kunci yang berbeda.</p>
+                        <button class="btn btn-primary" onclick="clearFilters()">
+                            <i data-lucide="refresh-cw"></i>
+                            Reset Filter
+                        </button>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            partnersToRender.forEach(partner => {
+                const card = document.createElement('div');
+                card.className = 'partner-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <img src="${partner.avatar}" alt="${partner.name}" class="avatar">
+                        <div class="partner-info">
+                            <h3 class="partner-name">${partner.name}</h3>
+                            <div class="partner-role">
+                                <i data-lucide="briefcase"></i>
+                                ${partner.role}
+                            </div>
+                            <p class="partner-bio">${partner.bio}</p>
+                        </div>
+                    </div>
+                    <div class="skills-container">
+                        ${partner.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                    </div>
+                    <div class="card-details">
+                        <div class="detail-item">
+                            <i data-lucide="map-pin"></i>
+                            ${partner.location}
+                        </div>
+                        <div class="detail-item">
+                            <i data-lucide="star"></i>
+                            ${partner.experience}
+                        </div>
+                        <div class="detail-item">
+                            <i data-lucide="clock"></i>
+                            ${partner.availability}
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-primary" onclick="connectWithPartner(${partner.id})">
+                            <i data-lucide="user-plus"></i>
+                            Hubungkan
+                        </button>
+                        <button class="btn btn-secondary" onclick="showPartnerDetail(${partner.id})">
+                            <i data-lucide="eye"></i>
+                            Lihat Profil
+                        </button>
+                    </div>
+                `;
+                partnerGrid.appendChild(card);
+            });
+
+            lucide.createIcons();
+        }
+
+        // Show partner detail modal
+        function showPartnerDetail(partnerId) {
+            const partner = partners.find(p => p.id === partnerId);
+            if (!partner) return;
+
+            modalContent.innerHTML = `
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <img src="${partner.avatar}" alt="${partner.name}" class="modal-avatar">
+                    <h2 class="modal-name">${partner.name}</h2>
+                    <div class="modal-role">
+                        <i data-lucide="briefcase"></i>
+                        ${partner.role} • ${partner.experience} Level • ${partner.availability}
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h3 class="section-title">
+                        <i data-lucide="map-pin"></i>
+                        Lokasi & Minat Bisnis
+                    </h3>
+                    <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                        <div class="detail-item">
+                            <i data-lucide="map-pin"></i>
+                            ${partner.location}
+                        </div>
+                        ${partner.businessInterests.map(interest => 
+                            `<span class="skill-tag">${interest}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h3 class="section-title">
+                        <i data-lucide="award"></i>
+                        Skills & Expertise
+                    </h3>
+                    <div class="skills-container">
+                        ${partner.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h3 class="section-title">
+                        <i data-lucide="file-text"></i>
+                        Ringkasan Pengalaman
+                    </h3>
+                    <p>${partner.experienceSummary}</p>
+                </div>
+
+                ${partner.projects ? `
+                <div class="modal-section">
+                    <h3 class="section-title">
+                        <i data-lucide="folder-open"></i>
+                        Project Highlights
+                    </h3>
+                    <ul style="padding-left: 20px;">
+                        ${partner.projects.map(project => `<li>${project}</li>`).join('')}
+                    </ul>
+                </div>
+                ` : ''}
+
+                ${partner.portfolio ? `
+                <div class="modal-section">
+                    <h3 class="section-title">
+                        <i data-lucide="external-link"></i>
+                        Portfolio
+                    </h3>
+                    <a href="${partner.portfolio}" target="_blank" style="color: var(--primary); text-decoration: none;">
+                        ${partner.portfolio}
+                    </a>
+                </div>
+                ` : ''}
+
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="connectWithPartner(${partner.id})">
+                        <i data-lucide="user-plus"></i>
+                        Connect & Kirim Pesan
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeModal()">
+                        <i data-lucide="x"></i>
+                        Tutup
+                    </button>
+                </div>
+            `;
+
+            partnerModal.classList.add('active');
+            lucide.createIcons();
+        }
+
+        // Connect with partner
+        function connectWithPartner(partnerId) {
+            const partner = partners.find(p => p.id === partnerId);
+            alert(`Mengirim connection request ke ${partner.name}`);
+            // In real app, this would make an API call
+        }
+
+        // Close modal
+        function closeModal() {
+            partnerModal.classList.remove('active');
+        }
+
+        // Clear all filters
+        function clearFilters() {
+            filters = {
+                skills: [],
+                location: '',
+                interests: [],
+                roles: [],
+                experience: [],
+                availability: []
+            };
+
+            // Reset UI
+            document.querySelectorAll('.checkbox').forEach(cb => cb.classList.remove('checked'));
+            document.querySelectorAll('.tag').forEach(tag => tag.classList.remove('selected'));
+            document.getElementById('locationFilter').value = '';
+            searchInput.value = '';
+
+            renderPartners(partners);
+        }
+
+        // Filter partners based on current filters
+        function filterPartners() {
+            let filtered = partners.filter(partner => {
+                // Skill filter
+                if (filters.skills.length > 0) {
+                    const hasMatchingSkill = filters.skills.some(skill => 
+                        partner.skills.some(s => s.toLowerCase().includes(skill))
+                    );
+                    if (!hasMatchingSkill) return false;
+                }
+
+                // Location filter
+                if (filters.location && partner.location.toLowerCase() !== filters.location) {
+                    return false;
+                }
+
+                // Interest filter
+                if (filters.interests.length > 0) {
+                    const hasMatchingInterest = filters.interests.some(interest =>
+                        partner.businessInterests.some(bi => bi.toLowerCase().includes(interest))
+                    );
+                    if (!hasMatchingInterest) return false;
+                }
+
+                // Role filter
+                if (filters.roles.length > 0) {
+                    const roleMap = {
+                        'founder': 'Founder',
+                        'cofounder': 'Co-Founder', 
+                        'mentor': 'Mentor'
+                    };
+                    if (!filters.roles.some(role => partner.role === roleMap[role])) return false;
+                }
+
+                // Experience filter
+                if (filters.experience.length > 0) {
+                    if (!filters.experience.includes(partner.experience.toLowerCase())) return false;
+                }
+
+                // Availability filter
+                if (filters.availability.length > 0) {
+                    const availabilityMap = {
+                        'fulltime': 'Full-time',
+                        'parttime': 'Part-time',
+                        'collab': 'Collaboration Only'
+                    };
+                    if (!filters.availability.some(avail => partner.availability === availabilityMap[avail])) return false;
+                }
+
+                return true;
+            });
+
+            // Apply search filter
+            const searchTerm = searchInput.value.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(partner =>
+                    partner.name.toLowerCase().includes(searchTerm) ||
+                    partner.skills.some(skill => skill.toLowerCase().includes(searchTerm)) ||
+                    partner.bio.toLowerCase().includes(searchTerm) ||
+                    partner.businessInterests.some(interest => interest.toLowerCase().includes(searchTerm))
+                );
+            }
+
+            renderPartners(filtered);
+        }
+
+        // Initialize event listeners
+        function initEventListeners() {
+            // Filter toggle
+            filterToggle.addEventListener('click', () => {
+                filterPanel.style.display = filterPanel.style.display === 'none' ? 'block' : 'none';
+            });
+
+            // Modal close
+            modalClose.addEventListener('click', closeModal);
+            partnerModal.addEventListener('click', (e) => {
+                if (e.target === partnerModal) closeModal();
+            });
+
+            // Search input
+            searchInput.addEventListener('input', filterPartners);
+
+            // Checkbox filters
+            document.querySelectorAll('.checkbox-group').forEach(group => {
+                group.addEventListener('click', () => {
+                    const checkbox = group.querySelector('.checkbox');
+                    checkbox.classList.toggle('checked');
+                    
+                    const filterType = Object.keys(group.dataset)[0];
+                    const filterValue = group.dataset[filterType];
+                    
+                    if (checkbox.classList.contains('checked')) {
+                        filters[filterType + 's'].push(filterValue);
+                    } else {
+                        filters[filterType + 's'] = filters[filterType + 's'].filter(v => v !== filterValue);
+                    }
+                    
+                    filterPartners();
+                });
+            });
+
+            // Tag filters
+            document.querySelectorAll('.tag').forEach(tag => {
+                tag.addEventListener('click', () => {
+                    tag.classList.toggle('selected');
+                    
+                    const interest = tag.dataset.interest;
+                    if (tag.classList.contains('selected')) {
+                        filters.interests.push(interest);
+                    } else {
+                        filters.interests = filters.interests.filter(i => i !== interest);
+                    }
+                    
+                    filterPartners();
+                });
+            });
+
+            // Location filter
+            document.getElementById('locationFilter').addEventListener('change', (e) => {
+                filters.location = e.target.value;
+                filterPartners();
+            });
+        }
+
+        // Initialize the application
+        function init() {
+            init3DAnimation();
+            initEventListeners();
+            renderPartners(partners);
+        }
+
+        // Start the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+
+        
+    </script>
+</body>
+</html>

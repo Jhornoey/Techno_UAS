@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foundra - Project Collaboration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --primary-dark: #3730a3;
+            --secondary: #06d6a0;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --success: #10b981;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 8px;
+            --radius-lg: 12px;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, #f0f4ff 0%, #f8fafc 100%);
+            color: var(--gray-800);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            grid-template-rows: 70px 1fr;
+            height: 100vh;
+            gap: 0;
+        }
+
+        /* Header Styles */
+        .header {
+            grid-column: 1 / -1;
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            box-shadow: var(--shadow-sm);
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .project-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .project-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            background: var(--gray-200);
+            transform: rotate(10deg);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: white;
+            border-right: 1px solid var(--gray-200);
+            padding: 24px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            padding: 0 20px;
+            margin-bottom: 32px;
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-500);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: var(--radius);
+            margin-bottom: 4px;
+            color: var(--gray-700);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: var(--gray-50);
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 500;
+        }
+
+        .nav-icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            background: var(--gray-50);
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .board-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .board-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .board-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            height: calc(100vh - 180px);
+        }
+
+        .kanban-column {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .column-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .column-title {
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .task-count {
+            background: var(--gray-200);
+            color: var(--gray-700);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .column-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .column-content {
+            padding: 16px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .task-card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 16px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--gray-300);
+            transition: all 0.2s ease;
+            cursor: grab;
+        }
+
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .task-card.high-priority {
+            border-left-color: var(--danger);
+        }
+
+        .task-card.medium-priority {
+            border-left-color: var(--accent);
+        }
+
+        .task-card.low-priority {
+            border-left-color: var(--success);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .task-title {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--gray-800);
+            margin-bottom: 4px;
+        }
+
+        .task-priority {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .priority-high {
+            background: #fee2e2;
+            color: var(--danger);
+        }
+
+        .priority-medium {
+            background: #fef3c7;
+            color: var(--accent);
+        }
+
+        .priority-low {
+            background: #d1fae5;
+            color: var(--success);
+        }
+
+        .task-description {
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .task-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-assignees {
+            display: flex;
+        }
+
+        .avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: -8px;
+            border: 2px solid white;
+        }
+
+        .avatar.more {
+            background: var(--gray-400);
+            font-size: 10px;
+        }
+
+        .task-deadline {
+            font-size: 12px;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .deadline-overdue {
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        .add-task-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            color: var(--gray-500);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: var(--radius);
+        }
+
+        .add-task-btn:hover {
+            background: var(--gray-100);
+            color: var(--primary);
+        }
+
+        /* Chat Panel Styles */
+        .chat-panel {
+            background: white;
+            border-left: 1px solid var(--gray-200);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .chat-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 4px;
+        }
+
+        .chat-subtitle {
+            font-size: 14px;
+            color: var(--gray-500);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 85%;
+        }
+
+        .message.own {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            background: var(--gray-100);
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message.own .message-content {
+            background: var(--primary);
+            color: white;
+        }
+
+        .message-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+            font-size: 11px;
+            color: var(--gray-500);
+        }
+
+        .message.own .message-info {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .chat-input {
+            padding: 20px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 12px;
+        }
+
+        .chat-input-field {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-300);
+            border-radius: 24px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .chat-input-field:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .chat-send-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .chat-send-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        /* Member List Styles */
+        .members-section {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .member-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+        }
+
+        .member-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .member-info {
+            flex: 1;
+        }
+
+        .member-name {
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--gray-800);
+        }
+
+        .member-role {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .member-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        .member-status.offline {
+            background: var(--gray-400);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px 24px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--gray-200);
+        }
+
+        .modal-body {
+            padding: 0 24px 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius);
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            outline: none;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .file-upload {
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--radius);
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+            background: var(--gray-50);
+        }
+
+        .file-upload-icon {
+            font-size: 24px;
+            color: var(--gray-400);
+            margin-bottom: 8px;
+        }
+
+        .file-upload-text {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        .file-upload-text strong {
+            color: var(--primary);
+        }
+
+        .modal-footer {
+            padding: 16px 24px 24px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        /* 3D Animation Container */
+        .animation-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.7;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .app-container {
+                grid-template-columns: 240px 1fr;
+            }
+            .chat-panel {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 70px 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+            .kanban-board {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+        }
+
+        /* Animation Keyframes */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-400);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-500);
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Animation Container -->
+    <div class="animation-container" id="animation-container"></div>
+
+    <!-- App Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <a href = "homepage.html" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <span>Foundra</span>
+            </a>
+            <div class="project-info">
+                <div class="project-name">Redesign Platform E-commerce</div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Tambah Anggota
+                </button>
+                    <a href="setting.html" class="logo">
+                <div class="btn-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+                </button>
+                    <a href="profile.html" class="logo">
+                <div class="btn-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+            </a>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Menu Utama</div>
+                <div class="nav-item active">
+                    <div class="nav-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-tasks"></i></div>
+                    <span>Tugas Saya</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <span>Kalender</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-chart-bar"></i></div>
+                    <span>Laporan</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Proyek</div>
+                <div class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-shopping-cart"></i></div>
+                    <span>Redesign E-commerce</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <span>App Mobile</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-landmark"></i></div>
+                    <span>Website Perusahaan</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-plus"></i></div>
+                    <span>Proyek Baru</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Tim</div>
+                <div class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-users"></i></div>
+                    <span>Anggota</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-comments"></i></div>
+                    <span>Percakapan</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-file-alt"></i></div>
+                    <span>Dokumen</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="board-header">
+                <h1 class="board-title">Papan Proyek</h1>
+                <div class="board-actions">
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-filter"></i>
+                        Filter
+                    </button>
+                    <button class="btn btn-primary" id="add-task-btn">
+                        <i class="fas fa-plus"></i>
+                        Tugas Baru
+                    </button>
+                </div>
+            </div>
+
+            <div class="kanban-board">
+                <!-- To Do Column -->
+                <div class="kanban-column">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <i class="fas fa-circle" style="color: #ef4444;"></i>
+                            To Do
+                            <div class="task-count">3</div>
+                        </div>
+                        <div class="column-actions">
+                            <div class="btn-icon small">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column-content">
+                        <div class="task-card high-priority fade-in">
+                            <div class="task-header">
+                                <div>
+                                    <div class="task-title">Redesign Homepage</div>
+                                    <div class="task-priority priority-high">Tinggi</div>
+                                </div>
+                                <div class="btn-icon small">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </div>
+                            </div>
+                            <div class="task-description">
+                                Membuat desain baru untuk homepage dengan fokus pada user experience dan conversion rate.
+                            </div>
+                            <div class="task-footer">
+                                <div class="task-assignees">
+                                    <div class="avatar">AS</div>
+                                    <div class="avatar">RM</div>
+                                </div>
+                                <div class="task-deadline">
+                                    <i class="far fa-clock"></i>
+                                    <span class="deadline-overdue">2 hari terlambat</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="task-card medium-priority fade-in">
+                            <div class="task-header">
+                                <div>
+                                    <div class="task-title">Integrasi Payment Gateway</div>
+                                    <div class="task-priority priority-medium">Sedang</div>
+                                </div>
+                                <div class="btn-icon small">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </div>
+                            </div>
+                            <div class="task-description">
+                                Menambahkan opsi pembayaran baru dan testing integrasi dengan sistem yang ada.
+                            </div>
+                            <div class="task-footer">
+                                <div class="task-assignees">
+                                    <div class="avatar">TJ</div>
+                                </div>
+                                <div class="task-deadline">
+                                    <i class="far fa-clock"></i>
+                                    <span>28 Jun</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="task-card low-priority fade-in">
+                            <div class="task-header">
+                                <div>
+                                    <div class="task-title">Update Dokumentasi API</div>
+                                    <div class="task-priority priority-low">Rendah</div>
+                                </div>
+                                <div class="btn-icon small">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </div>
+                            </div>
+                            <div class="task-description">
+                                Memperbarui dokumentasi API untuk endpoint yang baru ditambahkan.
+                            </div>
+                            <div class="task-footer">
+                                <div class="task-assignees">
+                                    <div class="avatar">DW</div>
+                                </div>
+                                <div class="task-deadline">
+                                    <i class="far fa-clock"></i>
+                                    <span>30 Jun</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="add-task-btn">
+                            <i class="fas fa-plus"></i>
+                            <span>Tambah tugas</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- In Progress Column -->
+                <div class="kanban-column">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <i class="fas fa-circle" style="color: #f59e0b;"></i>
+                            In Progress
+                            <div class="task-count">2</div>
+                        </div>
+                        <div class="column-actions">
+                            <div class="btn-icon small">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column-content">
+                        <div class="task-card medium-priority fade-in">
+                            <div class="task-header">
+                                <div>
+                                    <div class="task-title">Optimasi Database</div>
+                                    <div class="task-priority priority-medium">Sedang</div>
+                                </div>
+                                <div class="btn-icon small">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </div>
+                            </div>
+                            <div class="task-description">
+                                Meningkatkan performa query dan indexing untuk load time yang lebih cepat.
+                            </div>
+                            <div class="task-footer">
+                                <div class="task-assignees">
+                                    <div class="avatar">LS</div>
+                                    <div class="avatar more">+2</div>
+                                </div>
+                                <div class="task-deadline">
+                                    <i class="far fa-clock"></i>
+                                    <span>25 Jun</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="task-card high-priority fade-in">
+                            <div class="task-header">
+                                <div>
+                                    <div class="task-title">Perbaikan Bug Checkout</div>
+                                    <div class="task-priority priority-high">Tinggi</div>
+                                </div>
+                                <div class="btn-icon small">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </div>
+                            </div>
+                            <div class="task-description">
+                                Memperbaiki issue pada proses checkout yang menyebabkan error payment.
+                            </div>
+                            <div class="task-footer">
+                                <div class="task-assignees">
+                                    <div class="avatar">AK</div>
+                                </div>
+                                <div class="task-deadline">
+                                    <i class="far fa-clock"></i>
+                                    <span>Hari ini</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="add-task-btn">
+                            <i class="fas fa-plus"></i>
+                            <span>Tambah tugas</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Done Column -->
+                <div class="kanban-column">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <i class="fas fa-circle" style="color: #10b981;"></i>
+                            Done
+                            <div class="task-count">4</div>
+                        </div>
+                        <div class="column-actions">
+                            <div class="btn-icon small">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column-content">
+                        <div class="task-card fade-in">
+                            <div class="task-header">
+                                <div>
+                                    <div class="task-title">User Testing Prototype</div>
+                                </div>
+                                <div class="btn-icon small">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </div>
+                            </div>
+                            <div class="task-description">
+                                Melakukan testing usability dengan 10 participant dan menganalisis hasilnya.
+                            </div>
+                            <div class="task-footer">
+                                <div class="task-assignees">
+                                    <div class="avatar">NR</div>
+                                </div>
+                                <div class="task-deadline">
+                                    <i class="far fa-check-circle" style="color: #10b981;"></i>
+                                    <span>Selesai</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="task-card fade-in">
+                            <div class="task-header">
+                                <div>
+                                    <div class="task-title">Setup Server Staging</div>
+                                </div>
+                                <div class="btn-icon small">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </div>
+                            </div>
+                            <div class="task-description">
+                                Menyiapkan environment staging untuk testing sebelum deploy ke production.
+                            </div>
+                            <div class="task-footer">
+                                <div class="task-assignees">
+                                    <div class="avatar">MJ</div>
+                                    <div class="avatar">KP</div>
+                                </div>
+                                <div class="task-deadline">
+                                    <i class="far fa-check-circle" style="color: #10b981;"></i>
+                                    <span>Selesai</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="add-task-btn">
+                            <i class="fas fa-plus"></i>
+                            <span>Tambah tugas</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Chat Panel -->
+        <aside class="chat-panel">
+            <div class="chat-header">
+                <div class="chat-title">Kolaborasi Proyek</div>
+                <div class="chat-subtitle">Diskusi dengan tim</div>
+            </div>
+
+            <div class="members-section">
+                <div class="sidebar-title">Anggota Tim</div>
+                <div class="member-item">
+                    <div class="member-avatar">AS</div>
+                    <div class="member-info">
+                        <div class="member-name">Ahmad Surya</div>
+                        <div class="member-role">Project Manager</div>
+                    </div>
+                    <div class="member-status"></div>
+                </div>
+                <div class="member-item">
+                    <div class="member-avatar">RM</div>
+                    <div class="member-info">
+                        <div class="member-name">Rina Melati</div>
+                        <div class="member-role">UI/UX Designer</div>
+                    </div>
+                    <div class="member-status"></div>
+                </div>
+                <div class="member-item">
+                    <div class="member-avatar">TJ</div>
+                    <div class="member-info">
+                        <div class="member-name">Tegar Jaya</div>
+                        <div class="member-role">Frontend Developer</div>
+                    </div>
+                    <div class="member-status offline"></div>
+                </div>
+                <div class="member-item">
+                    <div class="member-avatar">DW</div>
+                    <div class="member-info">
+                        <div class="member-name">Dewi Wulandari</div>
+                        <div class="member-role">Backend Developer</div>
+                    </div>
+                    <div class="member-status"></div>
+                </div>
+            </div>
+
+            <div class="chat-messages">
+                <div class="message">
+                    <div class="message-avatar">AS</div>
+                    <div class="message-content">
+                        Halo team, progress redesign homepage bagaimana? Deadline sudah dekat.
+                        <div class="message-info">
+                            <span>Ahmad Surya</span>
+                            <span>10:30</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message own">
+                    <div class="message-avatar">RM</div>
+                    <div class="message-content">
+                        Sudah 80% selesai. Tinggal finishing touch di bagian hero section.
+                        <div class="message-info">
+                            <span>Anda</span>
+                            <span>10:32</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message">
+                    <div class="message-avatar">TJ</div>
+                    <div class="message-content">
+                        Untuk integrasi payment, saya butuh dokumentasi API terbaru.
+                        <div class="message-info">
+                            <span>Tegar Jaya</span>
+                            <span>10:35</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message own">
+                    <div class="message-avatar">RM</div>
+                    <div class="message-content">
+                        Oke, saya akan siapkan mockup untuk review besok pagi.
+                        <div class="message-info">
+                            <span>Anda</span>
+                            <span>10:40</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input">
+                <input type="text" class="chat-input-field" placeholder="Ketik pesan...">
+                <button class="chat-send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Add Task Modal -->
+    <div class="modal-overlay" id="task-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Tambah Tugas Baru</div>
+                <div class="modal-close" id="close-modal">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Judul Tugas</label>
+                    <input type="text" class="form-control" placeholder="Masukkan judul tugas">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Deskripsi</label>
+                    <textarea class="form-control" placeholder="Deskripsi tugas"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Assign To</label>
+                    <select class="form-control form-select">
+                        <option>Pilih anggota</option>
+                        <option>Ahmad Surya</option>
+                        <option>Rina Melati</option>
+                        <option>Tegar Jaya</option>
+                        <option>Dewi Wulandari</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Deadline</label>
+                    <input type="date" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Prioritas</label>
+                    <select class="form-control form-select">
+                        <option>Rendah</option>
+                        <option>Sedang</option>
+                        <option>Tinggi</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Lampiran</label>
+                    <div class="file-upload">
+                        <div class="file-upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="file-upload-text">
+                            Seret file ke sini atau <strong>klik untuk mengunggah</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-task">Batal</button>
+                <button class="btn btn-primary">Simpan Tugas</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functionality
+        document.getElementById('add-task-btn').addEventListener('click', function() {
+            document.getElementById('task-modal').classList.add('active');
+        });
+
+        document.getElementById('close-modal').addEventListener('click', function() {
+            document.getElementById('task-modal').classList.remove('active');
+        });
+
+        document.getElementById('cancel-task').addEventListener('click', function() {
+            document.getElementById('task-modal').classList.remove('active');
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('task-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+            }
+        });
+
+        // Simple 3D animation with Three.js
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('animation-container');
+            
+            // Only initialize Three.js if WebGL is supported
+            if (!!window.WebGLRenderingContext) {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setClearColor(0x000000, 0);
+                container.appendChild(renderer.domElement);
+                
+                // Create floating geometric shapes
+                const geometry = new THREE.IcosahedronGeometry(1, 0);
+                const material = new THREE.MeshBasicMaterial({ 
+                    color: 0x4f46e5, 
+                    wireframe: true,
+                    transparent: true,
+                    opacity: 0.1
+                });
+                
+                const shapes = [];
+                const numShapes = 8;
+                
+                for (let i = 0; i < numShapes; i++) {
+                    const shape = new THREE.Mesh(geometry, material);
+                    shape.position.x = Math.random() * 40 - 20;
+                    shape.position.y = Math.random() * 40 - 20;
+                    shape.position.z = Math.random() * 40 - 20;
+                    shape.rotation.x = Math.random() * Math.PI;
+                    shape.rotation.y = Math.random() * Math.PI;
+                    shapes.push(shape);
+                    scene.add(shape);
+                }
+                
+                camera.position.z = 30;
+                
+                // Animation loop
+                function animate() {
+                    requestAnimationFrame(animate);
+                    
+                    shapes.forEach((shape, index) => {
+                        shape.rotation.x += 0.002;
+                        shape.rotation.y += 0.003;
+                        
+                        // Float up and down
+                        shape.position.y += Math.sin(Date.now() * 0.001 + index) * 0.01;
+                    });
+                    
+                    renderer.render(scene, camera);
+                }
+                
+                animate();
+                
+                // Handle window resize
+                window.addEventListener('resize', function() {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+            }
+        });
+
+        // Add some interactive effects
+        document.querySelectorAll('.task-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-4px)';
+                this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.1)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+            });
+        });
+
+        // Chat send functionality
+        document.querySelector('.chat-send-btn').addEventListener('click', function() {
+            const input = document.querySelector('.chat-input-field');
+            const message = input.value.trim();
+            
+            if (message) {
+                const messagesContainer = document.querySelector('.chat-messages');
+                const newMessage = document.createElement('div');
+                newMessage.className = 'message own';
+                newMessage.innerHTML = `
+                    <div class="message-avatar">RM</div>
+                    <div class="message-content">
+                        ${message}
+                        <div class="message-info">
+                            <span>Anda</span>
+                            <span>Baru saja</span>
+                        </div>
+                    </div>
+                `;
+                
+                messagesContainer.appendChild(newMessage);
+                input.value = '';
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+                // Add fade-in animation
+                newMessage.style.opacity = '0';
+                newMessage.style.transform = 'translateY(10px)';
+                
+                setTimeout(() => {
+                    newMessage.style.transition = 'all 0.3s ease';
+                    newMessage.style.opacity = '1';
+                    newMessage.style.transform = 'translateY(0)';
+                }, 10);
+            }
+        });
+
+        // Allow sending message with Enter key
+        document.querySelector('.chat-input-field').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.querySelector('.chat-send-btn').click();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Pengusaha - Foundra</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #037DD6;
+            --primary-dark: #0260A4;
+            --accent: #FFD33D;
+            --text-primary: #24272A;
+            --text-secondary: #535A61;
+            --background: #FFFFFF;
+            --surface: #F2F4F6;
+            --surface-dark: #E5E8EB;
+            --border: #D6D9DC;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.12);
+            --radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background: #0D0E10;
+                --surface: #1A1D23;
+                --surface-dark: #24272E;
+                --text-primary: #FFFFFF;
+                --text-secondary: #9BA1A6;
+                --border: #3A3F47;
+                --shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+                --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.35);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background 3D Aurora */
+        .aurora-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .aurora-layer {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: linear-gradient(45deg, 
+                rgba(3, 125, 214, 0.1) 0%, 
+                rgba(255, 211, 61, 0.1) 25%, 
+                rgba(156, 39, 176, 0.1) 50%, 
+                rgba(0, 150, 136, 0.1) 75%, 
+                rgba(3, 125, 214, 0.1) 100%);
+            animation: aurora-move 20s infinite linear;
+            opacity: 0.7;
+            filter: blur(60px);
+        }
+
+        .aurora-layer:nth-child(2) {
+            animation: aurora-move 25s infinite linear reverse;
+            background: linear-gradient(135deg, 
+                rgba(255, 211, 61, 0.1) 0%, 
+                rgba(156, 39, 176, 0.1) 25%, 
+                rgba(0, 150, 136, 0.1) 50%, 
+                rgba(3, 125, 214, 0.1) 75%, 
+                rgba(255, 211, 61, 0.1) 100%);
+            opacity: 0.5;
+            filter: blur(80px);
+        }
+
+        .aurora-layer:nth-child(3) {
+            animation: aurora-move 30s infinite linear;
+            background: linear-gradient(225deg, 
+                rgba(156, 39, 176, 0.1) 0%, 
+                rgba(0, 150, 136, 0.1) 25%, 
+                rgba(3, 125, 214, 0.1) 50%, 
+                rgba(255, 211, 61, 0.1) 75%, 
+                rgba(156, 39, 176, 0.1) 100%);
+            opacity: 0.3;
+            filter: blur(100px);
+        }
+
+        @keyframes aurora-move {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(-5%, 5%) rotate(90deg);
+            }
+            50% {
+                transform: translate(5%, -5%) rotate(180deg);
+            }
+            75% {
+                transform: translate(-5%, 5%) rotate(270deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+
+        /* Navigation */
+        .navigation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .navigation {
+                background: rgba(13, 14, 16, 0.8);
+            }
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 100px 20px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .profile-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+        }
+
+        @media (max-width: 992px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .profile-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            margin-bottom: 24px;
+        }
+
+        .profile-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-4px);
+        }
+
+        .profile-header {
+            display: flex;
+            padding: 32px;
+            gap: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary);
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(3, 125, 214, 0.2);
+        }
+
+        .profile-photo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(3, 125, 214, 0.3);
+        }
+
+        .profile-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .profile-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .profile-role {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(3, 125, 214, 0.3);
+            transition: var(--transition);
+        }
+
+        .profile-role:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(3, 125, 214, 0.4);
+        }
+
+        .profile-bio {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .skill-tag {
+            background-color: var(--surface-dark);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: var(--transition);
+            border: 1px solid var(--border);
+        }
+
+        .skill-tag:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(3, 125, 214, 0.3);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background-color: var(--surface-dark);
+            color: var(--text-secondary);
+            border-radius: 50%;
+            text-decoration: none;
+            transition: var(--transition);
+            border: 1px solid var(--border);
+        }
+
+        .social-link:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 4px 10px rgba(3, 125, 214, 0.3);
+        }
+
+        .profile-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            padding: 24px 32px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 20px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 12px rgba(3, 125, 214, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(3, 125, 214, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: var(--surface-dark);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--surface);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent), #FFB800);
+            color: var(--text-primary);
+            box-shadow: 0 4px 12px rgba(255, 211, 61, 0.3);
+        }
+
+        .btn-accent:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 211, 61, 0.4);
+        }
+
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-item {
+            margin-bottom: 12px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .sidebar-link:hover, .sidebar-link.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .sidebar-icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+                padding: 24px;
+            }
+            
+            .profile-photo {
+                align-self: center;
+            }
+            
+            .social-links {
+                justify-content: center;
+            }
+            
+            .profile-actions {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--surface);
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 80px 12px 20px;
+            }
+            
+            .profile-header {
+                padding: 20px;
+            }
+            
+            .profile-name {
+                font-size: 24px;
+            }
+            
+            .stats-section {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Animation untuk elemen yang muncul */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .delay-1 {
+            animation-delay: 0.1s;
+            opacity: 0;
+        }
+
+        .delay-2 {
+            animation-delay: 0.2s;
+            opacity: 0;
+        }
+
+        .delay-3 {
+            animation-delay: 0.3s;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background 3D Aurora -->
+    <div class="aurora-background">
+        <div class="aurora-layer"></div>
+        <div class="aurora-layer"></div>
+        <div class="aurora-layer"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="nav-container">
+            <a href="homepage.html" class="logo">Foundra</a>
+            <div class="nav-links" id="navLinks">
+                <a href="homepage.html" class="nav-link">Homepage</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="artikel.html" class="nav-link">Artikel</a>
+                <a href="profile.html" class="nav-link active">Profil</a>
+                <a href="collaboration.html" class="nav-link">Project Collaboration</a>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="profile-container">
+            <div>
+                <div class="profile-card animate-fade-in">
+                    <div class="profile-header">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Foto Profil" class="profile-photo">
+                        <div class="profile-info">
+                            <h1 class="profile-name">Ahmad Rizki</h1>
+                            <div class="profile-role">Founder & CEO</div>
+                            <p class="profile-bio">Pengusaha teknologi dengan pengalaman 8 tahun dalam membangun startup dari nol hingga sukses. Fokus pada solusi fintech dan e-commerce untuk UMKM Indonesia.</p>
+                            <div class="skills-container">
+                                <span class="skill-tag">Leadership</span>
+                                <span class="skill-tag">Product Strategy</span>
+                                <span class="skill-tag">Business Development</span>
+                                <span class="skill-tag">Digital Marketing</span>
+                                <span class="skill-tag">Fundraising</span>
+                            </div>
+                            <div class="social-links">
+                                <a href="#" class="social-link" aria-label="LinkedIn">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="#" class="social-link" aria-label="Twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="social-link" aria-label="Instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="social-link" aria-label="Website">
+                                    <i class="fas fa-globe"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-actions">
+                        <button class="action-btn btn-primary delay-1">
+                            <i class="fas fa-edit"></i> Edit Profil
+                        </button>
+                        <button class="action-btn btn-secondary delay-2">
+                            <i class="fas fa-store"></i> Showcase Bisnis
+                        </button>
+                        <button class="action-btn btn-accent delay-3">
+                            <i class="fas fa-newspaper"></i> Postingan Saya
+                        </button>
+                    </div>
+                </div>
+
+                <div class="stats-section">
+                    <div class="stat-card animate-fade-in delay-1">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Proyek Selesai</div>
+                    </div>
+                    <div class="stat-card animate-fade-in delay-2">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Tahun Pengalaman</div>
+                    </div>
+                    <div class="stat-card animate-fade-in delay-1">
+                        <div class="stat-value">24</div>
+                        <div class="stat-label">Tim Member</div>
+                    </div>
+                    <div class="stat-card animate-fade-in delay-2">
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">Penghargaan</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Navigation -->
+            <div class="sidebar animate-fade-in delay-2">
+                <h3 class="sidebar-title">Navigasi Profil</h3>
+                <ul class="sidebar-menu">
+                    <li class="sidebar-item">
+                        <a href="profile.html" class="sidebar-link active">
+                            <i class="fas fa-user sidebar-icon"></i>
+                            <span>Profil Saya</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="homepage.html" class="sidebar-link">
+                            <i class="fas fa-home sidebar-icon"></i>
+                            <span>Homepage</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="dashboard.html" class="sidebar-link">
+                            <i class="fas fa-tachometer-alt sidebar-icon"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="artikel.html" class="sidebar-link">
+                            <i class="fas fa-newspaper sidebar-icon"></i>
+                            <span>Artikel</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="collaboration.html" class="sidebar-link">
+                            <i class="fas fa-users sidebar-icon"></i>
+                            <span>Project Collaboration</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="setting.html" class="sidebar-link">
+                            <i class="fas fa-cog sidebar-icon"></i>
+                            <span>Pengaturan</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Menambahkan interaksi tambahan untuk pengalaman yang lebih dinamis
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animasi hover untuk card statistik
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-6px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Animasi klik untuk tombol
+            const buttons = document.querySelectorAll('.action-btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const navLinks = document.getElementById('navLinks');
+            
+            if (mobileMenuBtn && navLinks) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                });
+            }
+
+            // Efek parallax sederhana pada scroll
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const profileCard = document.querySelector('.profile-card');
+                if (profileCard) {
+                    profileCard.style.transform = `translateY(${scrolled * 0.05}px)`;
+                }
+                
+                // Efek parallax untuk background aurora
+                const auroraLayers = document.querySelectorAll('.aurora-layer');
+                auroraLayers.forEach((layer, index) => {
+                    const speed = 0.5 + (index * 0.1);
+                    layer.style.transform = `translateY(${scrolled * speed * 0.05}px)`;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

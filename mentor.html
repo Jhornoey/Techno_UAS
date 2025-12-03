@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Mentor Career Screen - Foundra</title>
+    <meta name="description" content="Mentor discovery, profiles, scheduling and 3D animated cards." />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --primary:#007bff;
+            --primary-dark:#0056b3;
+            --muted:#6c757d;
+            --accent:#28a745;
+            --bg:#f6f9fc;
+            --card:#ffffff;
+            --text:#212529;
+            --radius:12px;
+            --gap:16px;
+            --shadow-light: rgba(2,6,23,0.06);
+            --shadow-deep: rgba(2,6,23,0.14);
+        }
+
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+            margin:0;
+            font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+            background: linear-gradient(180deg,var(--bg),#eef5fb);
+            color:var(--text);
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            padding:24px;
+            perspective:1800px;
+        }
+
+        .container{
+            max-width:1280px;
+            margin:0 auto;
+        }
+
+        /* HEADER */
+        .header{
+            display:flex;
+            align-items:center;
+            gap:var(--gap);
+            background:var(--card);
+            padding:18px;
+            border-radius:var(--radius);
+            box-shadow:0 6px 22px var(--shadow-light);
+            margin-bottom:20px;
+            position:sticky;
+            top:12px;
+            z-index:100;
+        }
+        .logo{
+            font-weight:700;
+            color:var(--primary);
+            font-size:1.35rem;
+            letter-spacing:0.2px;
+        }
+        .search-area{display:flex;gap:12px;flex:1;align-items:center}
+        .search-input{
+            flex:1;
+            padding:10px 14px;
+            border-radius:8px;
+            border:1px solid #e6eef8;
+            background:transparent;
+            outline:none;
+            font-size:0.95rem;
+            transition:box-shadow .18s, border-color .18s;
+        }
+        .search-input:focus{box-shadow:0 6px 18px rgba(3,102,214,0.08);border-color:var(--primary)}
+        .filter-toggle{
+            background:var(--primary);
+            color:white;
+            border:none;
+            padding:10px 14px;
+            border-radius:10px;
+            cursor:pointer;
+            font-weight:600;
+        }
+        .header-actions{display:flex;gap:8px;align-items:center}
+        .pill{
+            background:linear-gradient(180deg,#fff,#f7fbff);
+            border-radius:999px;
+            padding:6px 10px;
+            border:1px solid #e6eef8;
+            font-size:0.9rem;
+        }
+
+        /* LAYOUT */
+        .main{
+            display:grid;
+            grid-template-columns:320px 1fr;
+            gap:24px;
+            align-items:start;
+        }
+
+        /* FILTER PANEL */
+        .filter-panel{
+            background:var(--card);
+            padding:18px;
+            border-radius:var(--radius);
+            box-shadow:0 10px 30px var(--shadow-light);
+            position:sticky;
+            top:92px;
+            max-height:calc(100vh - 120px);
+            overflow:auto;
+            transform-origin:left center;
+            transition:transform .28s ease, opacity .2s ease, visibility .2s;
+        }
+        .filter-panel.hidden{transform:translateX(-8px) scale(.995); opacity:0; visibility:hidden}
+        .filter-panel h3{margin:0 0 12px 0; color:var(--primary)}
+        .filter-group{margin-bottom:14px}
+        .filter-group h4{margin:0 0 8px 0; font-size:0.95rem;}
+        label.inline{display:flex;gap:8px;align-items:center;margin-bottom:8px;font-size:0.95rem;cursor:pointer}
+        input[type="checkbox"],input[type="radio"]{accent-color:var(--primary);transform:scale(1.05)}
+        select{width:100%;padding:10px;border-radius:10px;border:1px solid #e6eef8;background:white;appearance:none;background-image:linear-gradient(45deg,#6c757d 50%, transparent 50%),linear-gradient(135deg,transparent 50%, #6c757d 50%); background-position:right 12px center, right 6px center; background-size:6px 6px,6px 6px; background-repeat:no-repeat}
+        .apply-btn{width:100%;padding:12px;border-radius:10px;border:none;background:var(--accent);color:white;font-weight:700;cursor:pointer;margin-top:8px}
+
+        /* MENTOR LIST & CARDS */
+        .mentor-list{
+            display:grid;
+            grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+            gap:22px;
+            align-items:stretch;
+            transform-style:preserve-3d;
+            perspective:1200px;
+        }
+
+        .mentor-card{
+            background:linear-gradient(180deg,var(--card),#fff);
+            border-radius:14px;
+            padding:18px;
+            box-shadow:0 10px 30px var(--shadow-light);
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+            align-items:center;
+            text-align:center;
+            transition:transform .35s cubic-bezier(.2,.9,.3,1), box-shadow .35s;
+            transform-style:preserve-3d;
+            cursor:default;
+            min-height:360px;
+            position:relative;
+            overflow:visible;
+        }
+
+        /* 3D hover + tilt */
+        .mentor-card:hover{
+            transform: translateY(-12px) scale(1.02) rotateY(2deg);
+            box-shadow:0 26px 60px var(--shadow-deep);
+            z-index:20;
+        }
+
+        .avatar{
+            width:112px;height:112px;border-radius:50%;
+            border:4px solid var(--primary);
+            overflow:hidden;
+            display:inline-grid;
+            place-items:center;
+            background:linear-gradient(90deg,#fff,#f3f8ff);
+            box-shadow:0 8px 22px rgba(0,0,0,0.06);
+            transform:translateZ(40px);
+        }
+        .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+
+        .mentor-name{font-weight:700;font-size:1.15rem;color:var(--text);transform:translateZ(20px)}
+        .expertise{color:var(--primary);font-weight:600}
+        .skills{color:var(--muted);font-size:0.9rem}
+        .rating{color:#f6b600;font-weight:700}
+        .experience{font-size:0.95rem;color:var(--text)}
+        .desc{font-size:0.92rem;color:var(--muted);flex:1;padding-top:6px}
+
+        .card-actions{
+            display:flex;gap:8px;width:100%;transform:translateZ(10px);
+        }
+        .btn{
+            flex:1;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:600;
+        }
+        .btn-outline{background:transparent;border:1px solid var(--primary);color:var(--primary)}
+        .btn-primary{background:var(--accent);color:white;border:none}
+
+        /* PROFILE MODAL */
+        .modal{
+            position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+            background:rgba(3,10,22,0.55);z-index:200;opacity:0;visibility:hidden;transition:opacity .18s;
+        }
+        .modal.active{opacity:1;visibility:visible}
+        .modal-panel{
+            background:var(--card);border-radius:14px;padding:22px;max-width:920px;width:96%;max-height:90vh;overflow:auto;box-shadow:0 30px 90px rgba(3,10,22,0.35);
+            transform-origin:center center; transform:translateY(18px) scale(.98);
+            transition:transform .2s;
+        }
+        .modal.active .modal-panel{transform:none}
+        .modal-header{display:flex;gap:16px;align-items:center;border-bottom:1px solid #eef4fb;padding-bottom:12px;margin-bottom:12px}
+        .modal-header .meta{display:flex;flex-direction:column;gap:2px;align-items:flex-start}
+        .close{margin-left:auto;background:transparent;border:none;font-size:22px;cursor:pointer;color:var(--muted)}
+
+        .profile-grid{display:grid;grid-template-columns:180px 1fr;gap:18px;align-items:start}
+        .profile-photo{width:160px;height:160px;border-radius:10px;overflow:hidden;border:4px solid var(--primary)}
+        .profile-photo img{width:100%;height:100%;object-fit:cover}
+        .profile-details h3{margin:8px 0 6px 0}
+        .chips{display:flex;gap:8px;flex-wrap:wrap}
+        .chip{padding:6px 10px;border-radius:999px;background:#f3f8ff;border:1px solid #e6f0ff;color:var(--primary);font-weight:600}
+
+        .calendar{margin-top:12px;background:linear-gradient(180deg,#fff,#fbfeff);padding:14px;border-radius:10px;border:1px dashed #e7f1ff}
+        .slots{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+        .slot{padding:8px 10px;border-radius:8px;border:1px solid #dfeefe;background:white;cursor:pointer}
+        .slot.selected{background:var(--primary);color:white;border-color:var(--primary);font-weight:700}
+
+        /* RESPONSIVE */
+        @media (max-width:1000px){
+            .main{grid-template-columns:1fr}
+            .filter-panel{position:relative;top:0;max-height:none}
+            .filter-panel.hidden{display:none}
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header" aria-label="Topbar">
+            <a href="homepage.html" class="logo" aria-hidden="true">Foundra</a>
+            <div class="search-area">
+                <input id="search" class="search-input" type="search" placeholder="Search mentors by name, expertise or skill..." aria-label="Search mentors">
+                <button id="filterToggle" class="filter-toggle" aria-expanded="true" aria-controls="filterPanel">Filters</button>
+            </div>
+            <div class="header-actions">
+                <div class="pill" title="Mentors online">24 online</div>
+            </div>
+        </header>
+
+        <main class="main" id="mainContent">
+            <aside id="filterPanel" class="filter-panel" aria-label="Filter mentors">
+                <h3>Filter Mentors</h3>
+
+                <div class="filter-group">
+                    <h4>Expertise</h4>
+                    <label class="inline"><input type="checkbox" name="expertise" value="Business"> Business</label>
+                    <label class="inline"><input type="checkbox" name="expertise" value="Technology"> Technology</label>
+                    <label class="inline"><input type="checkbox" name="expertise" value="Marketing"> Marketing</label>
+                    <label class="inline"><input type="checkbox" name="expertise" value="Design"> Design</label>
+                </div>
+
+                <div class="filter-group">
+                    <h4>Experience Level</h4>
+                    <label class="inline"><input type="radio" name="level" value="" checked> Any</label>
+                    <label class="inline"><input type="radio" name="level" value="Junior"> Junior</label>
+                    <label class="inline"><input type="radio" name="level" value="Mid"> Mid</label>
+                    <label class="inline"><input type="radio" name="level" value="Senior"> Senior</label>
+                </div>
+
+                <div class="filter-group">
+                    <h4>Availability</h4>
+                    <select id="availability">
+                        <option value="">Any</option>
+                        <option value="Weekdays">Weekdays</option>
+                        <option value="Weekends">Weekends</option>
+                        <option value="Evenings">Evenings</option>
+                    </select>
+                </div>
+
+                <button id="applyFilters" class="apply-btn">Apply Filters</button>
+            </aside>
+
+            <section class="mentor-list" id="mentorList" aria-live="polite">
+                <!-- Cards are rendered by JS from data; initial static examples follow -->
+                <!-- Card template (populated by JS) -->
+            </section>
+        </main>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal-panel" role="document" aria-labelledby="profileTitle">
+            <div class="modal-header">
+                <div>
+                    <strong id="profileTitle" style="font-size:1.15rem"></strong>
+                    <div id="profileSubtitle" style="color:var(--muted);font-size:0.95rem"></div>
+                </div>
+                <button class="close" id="closeModal" aria-label="Close profile">&times;</button>
+            </div>
+
+            <div class="profile-grid">
+                <div class="profile-photo" id="profilePhoto">
+                    <!-- image -->
+                </div>
+                <div class="profile-details">
+                    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+                        <div>
+                            <h3 id="profileName" style="margin:0"></h3>
+                            <div id="profileExpertise" style="color:var(--muted)"></div>
+                        </div>
+                        <div style="text-align:right">
+                            <div id="profileRating" style="font-weight:700;color:#f6b600"></div>
+                            <div id="profileExperience" style="font-size:0.95rem;color:var(--muted)"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:12px">
+                        <strong>About</strong>
+                        <p id="profileAbout" style="color:var(--muted);margin:8px 0 0 0"></p>
+                    </div>
+
+                    <div style="margin-top:12px">
+                        <strong>Skills & Expertise</strong>
+                        <div class="chips" id="profileSkills" style="margin-top:8px"></div>
+                    </div>
+
+                    <div class="calendar" aria-label="Booking calendar">
+                        <strong>Book a session</strong>
+                        <div class="slots" id="slotContainer" role="list"></div>
+                        <button id="bookBtn" class="btn btn-primary" style="margin-top:12px">Book Session</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock mentor dataset
+        const mentors = [
+            {
+                id:1,
+                name:"Jane Doe",
+                expertise:"Business",
+                main:"Business Strategy",
+                skills:["Marketing","Leadership","Financial Planning"],
+                rating:4,
+                experience:"10 years",
+                about:"Jane has helped over 50 startups grow their revenue and product-market fit with pragmatic strategy and execution.",
+                availability:["Weekdays","Evenings"],
+                level:"Senior",
+                avatar: avatarSVG("#FFB6C1","JD")
+            },
+            {
+                id:2,
+                name:"John Smith",
+                expertise:"Technology",
+                main:"Technology & Development",
+                skills:["Web Development","AI","Scalability"],
+                rating:5,
+                experience:"8 years",
+                about:"John specializes in building scalable web applications and integrating practical AI solutions for product teams.",
+                availability:["Weekdays","Weekends"],
+                level:"Senior",
+                avatar: avatarSVG("#c7e6ff","JS")
+            },
+            {
+                id:3,
+                name:"Aisha Karim",
+                expertise:"Marketing",
+                main:"Growth & Performance",
+                skills:["SEO","Content","Analytics"],
+                rating:4,
+                experience:"6 years",
+                about:"Aisha focuses on data-driven growth, blending creative content strategies with performance marketing.",
+                availability:["Weekends","Evenings"],
+                level:"Mid",
+                avatar: avatarSVG("#eef7d6","AK")
+            },
+            {
+                id:4,
+                name:"Luca Rossi",
+                expertise:"Design",
+                main:"Product & UX Design",
+                skills:["UX","Research","Design Systems"],
+                rating:5,
+                experience:"9 years",
+                about:"Luca builds delightful user experiences and robust design systems for early-stage and scaling products.",
+                availability:["Weekdays"],
+                level:"Senior",
+                avatar: avatarSVG("#f0e7ff","LR")
+            }
+        ];
+
+        // Utility: inline SVG avatar data
+        function avatarSVG(bg, initials){
+            const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='256' height='256'><rect width='100%' height='100%' fill='${bg}' rx='32'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-family='Inter,Arial' font-size='96' fill='#ffffff' font-weight='700'>${initials}</text></svg>`;
+            return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+        }
+
+        // Render mentor cards
+        const listEl = document.getElementById('mentorList');
+        function renderMentors(data){
+            listEl.innerHTML = '';
+            if(!data.length){
+                listEl.innerHTML = '<div style="grid-column:1/-1;background:transparent;color:var(--muted);text-align:center;padding:28px;border-radius:12px">No mentors match your search or filters.</div>';
+                return;
+            }
+            data.forEach(m => {
+                const card = document.createElement('article');
+                card.className = 'mentor-card';
+                card.setAttribute('role','article');
+                card.dataset.id = m.id;
+                card.dataset.name = m.name.toLowerCase();
+                card.dataset.expertise = m.expertise;
+                card.dataset.level = m.level;
+                card.dataset.availability = m.availability.join(',');
+                card.innerHTML = `
+                    <div class="avatar" aria-hidden="true"><img src="${m.avatar}" alt="${m.name} avatar"></div>
+                    <div class="mentor-name">${m.name}</div>
+                    <div class="expertise">${m.main}</div>
+                    <div class="skills">${m.skills.join(', ')}</div>
+                    <div class="rating">${'★'.repeat(m.rating)}${'☆'.repeat(5-m.rating)}</div>
+                    <div class="experience">${m.experience}</div>
+                    <div class="desc">${m.about}</div>
+                    <div class="card-actions">
+                        <button class="btn btn-primary" data-action="schedule">Schedule</button>
+                        <button class="btn btn-outline" data-action="view">View Profile</button>
+                    </div>
+                `;
+                // enable 3D tilt
+                enableTilt(card);
+                listEl.appendChild(card);
+            });
+        }
+
+        // 3D tilt effect for each card
+        function enableTilt(card){
+            const maxRotate = 8; // degrees
+            const damp = 0.08;
+            let bounds;
+            card.addEventListener('mousemove', (e) => {
+                bounds = bounds || card.getBoundingClientRect();
+                const x = e.clientX - bounds.left;
+                const y = e.clientY - bounds.top;
+                const px = (x / bounds.width - 0.5) * 2;
+                const py = (y / bounds.height - 0.5) * -2;
+                const rotY = px * maxRotate;
+                const rotX = py * maxRotate;
+                const transZ = 18;
+                card.style.transform = `perspective(900px) translateY(-10px) scale(1.02) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg)`;
+                card.style.boxShadow = `0 26px 60px rgba(2,6,23,0.16)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+                card.style.boxShadow = '';
+                bounds = null;
+            });
+        }
+
+        // Filtering logic
+        function applyFilters(){
+            const q = document.getElementById('search').value.trim().toLowerCase();
+            const checkedExpertise = Array.from(document.querySelectorAll('input[name="expertise"]:checked')).map(i=>i.value);
+            const level = Array.from(document.querySelectorAll('input[name="level"]:checked')).map(i=>i.value).find(Boolean) || '';
+            const availability = document.getElementById('availability').value;
+            const filtered = mentors.filter(m=>{
+                if(q){
+                    const inText = `${m.name} ${m.main} ${m.skills.join(' ')}`.toLowerCase();
+                    if(!inText.includes(q)) return false;
+                }
+                if(checkedExpertise.length && !checkedExpertise.includes(m.expertise)) return false;
+                if(level && m.level !== level) return false;
+                if(availability && !m.availability.includes(availability)) return false;
+                return true;
+            });
+            renderMentors(filtered);
+        }
+
+        // Modal / Profile handling
+        const modal = document.getElementById('profileModal');
+        const profileTitle = document.getElementById('profileTitle');
+        const profileSubtitle = document.getElementById('profileSubtitle');
+        const profilePhoto = document.getElementById('profilePhoto');
+        const profileName = document.getElementById('profileName');
+        const profileExpertise = document.getElementById('profileExpertise');
+        const profileRating = document.getElementById('profileRating');
+        const profileExperience = document.getElementById('profileExperience');
+        const profileAbout = document.getElementById('profileAbout');
+        const profileSkills = document.getElementById('profileSkills');
+        const slotContainer = document.getElementById('slotContainer');
+        let activeMentor = null;
+        let selectedSlot = null;
+
+        function openProfile(id){
+            const m = mentors.find(x=>x.id==id); if(!m) return;
+            activeMentor = m;
+            profileTitle.textContent = m.name;
+            profileSubtitle.textContent = m.main + ' • ' + m.expertise;
+            profileName.textContent = m.name;
+            profileExpertise.textContent = m.main;
+            profileRating.textContent = `${'★'.repeat(m.rating)}${'☆'.repeat(5-m.rating)}`;
+            profileExperience.textContent = m.experience;
+            profileAbout.textContent = m.about;
+            profilePhoto.innerHTML = `<img src="${m.avatar}" alt="${m.name}">`;
+            profileSkills.innerHTML = '';
+            m.skills.forEach(s=>{
+                const el = document.createElement('div'); el.className='chip'; el.textContent = s; profileSkills.appendChild(el);
+            });
+            // generate slots (mock)
+            slotContainer.innerHTML = '';
+            const slots = generateSlots(m.availability);
+            slots.forEach(t=>{
+                const btn = document.createElement('button');
+                btn.className='slot';
+                btn.textContent = t;
+                btn.type='button';
+                btn.addEventListener('click', ()=> {
+                    document.querySelectorAll('.slot').forEach(s=>s.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    selectedSlot = t;
+                });
+                slotContainer.appendChild(btn);
+            });
+
+            modal.classList.add('active');
+            modal.setAttribute('aria-hidden','false');
+            document.body.style.overflow='hidden';
+        }
+
+        function closeProfile(){
+            modal.classList.remove('active');
+            modal.setAttribute('aria-hidden','true');
+            document.body.style.overflow='';
+            selectedSlot = null;
+        }
+
+        function generateSlots(avail){
+            // Simple logic to return some times
+            const all = ["Mon 10:00","Mon 14:00","Tue 16:00","Wed 09:00","Thu 11:00","Fri 15:00","Sat 10:00","Sun 11:00","Evening 19:00"];
+            if(avail.includes('Weekdays')) return all.filter(s=>!s.startsWith('Sat') && !s.startsWith('Sun')).slice(0,4);
+            if(avail.includes('Weekends')) return all.filter(s=>s.startsWith('Sat')||s.startsWith('Sun')).slice(0,3);
+            if(avail.includes('Evenings')) return all.filter(s=>s.startsWith('Evening')).slice(0,2);
+            return all.slice(0,5);
+        }
+
+        // Events
+        document.getElementById('applyFilters').addEventListener('click', applyFilters);
+        document.getElementById('search').addEventListener('input', function(){ applyFilters(); });
+
+        // Toggle filter panel on small screens
+        const filterToggle = document.getElementById('filterToggle');
+        const filterPanel = document.getElementById('filterPanel');
+        filterToggle.addEventListener('click', ()=>{
+            const hidden = filterPanel.classList.toggle('hidden');
+            filterToggle.setAttribute('aria-expanded', String(!hidden));
+        });
+
+        // Delegate card actions
+        listEl.addEventListener('click', (e)=>{
+            const btn = e.target.closest('button');
+            if(!btn) return;
+            const card = e.target.closest('.mentor-card');
+            if(!card) return;
+            const id = card.dataset.id;
+            const action = btn.dataset.action;
+            if(action === 'view'){
+                openProfile(id);
+            } else if(action === 'schedule'){
+                openProfile(id);
+                // focus booking area (slot)
+                setTimeout(()=> {
+                    const first = slotContainer.querySelector('.slot');
+                    if(first){ first.click(); first.scrollIntoView({behavior:'smooth',block:'center'}); }
+                }, 120);
+            }
+        });
+
+        // Modal controls
+        document.getElementById('closeModal').addEventListener('click', closeProfile);
+        modal.addEventListener('click', (e)=> { if(e.target === modal) closeProfile(); });
+        document.getElementById('bookBtn').addEventListener('click', ()=>{
+            if(!activeMentor) return;
+            if(!selectedSlot){ alert('Please select a time slot first.'); return; }
+            // mock booking flow
+            alert(`Booked ${activeMentor.name} on ${selectedSlot}. Confirmation sent to your email.`);
+            closeProfile();
+        });
+
+        // Initialize
+        renderMentors(mentors);
+
+        // Accessibility: close modal with Escape
+        window.addEventListener('keydown', (e)=>{
+            if(e.key === 'Escape' && modal.classList.contains('active')) closeProfile();
+        });
+    </script>
+</body>
+</html>

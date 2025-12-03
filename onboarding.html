@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foundra - Platform untuk Pengusaha Indonesia</title>
+    <style>
+        /* === VARIABEL & RESET === */
+        :root {
+            --primary-blue: #2563eb;
+            --primary-indigo: #4f46e5;
+            --accent-teal: #0d9488;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --background-light: #f8fafc;
+            --surface-white: #ffffff;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2.5rem;
+            --space-xl: 4rem;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--background-light) 0%, #e0f2fe 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* === KONTAINER UTAMA === */
+        .onboarding-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* === PROGRESS INDICATOR === */
+        .progress-container {
+            display: flex;
+            justify-content: center;
+            padding: var(--space-md);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+
+        .progress-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: rgba(37, 99, 235, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background-color: var(--primary-blue);
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        /* === SLIDE CONTENT === */
+        .slides-container {
+            flex: 1;
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-xl) var(--space-md) var(--space-lg);
+        }
+
+        /* === ILLUSTRATION SECTION === */
+        .illustration-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 320px;
+            margin-bottom: var(--space-lg);
+        }
+
+        .illustration {
+            width: 100%;
+            height: 280px;
+            position: relative;
+        }
+
+        /* === TEXT CONTENT === */
+        .text-content {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+            max-width: 320px;
+        }
+
+        .title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+            line-height: 1.3;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        /* === BUTTON === */
+        .button-container {
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .primary-button {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-indigo));
+            color: white;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .primary-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .primary-button:active {
+            transform: translateY(0);
+        }
+
+        /* === ILLUSTRATION STYLES === */
+        /* Screen 1 Illustration - Entrepreneur Connection */
+        .connection-illustration {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .person {
+            width: 80px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-indigo));
+            border-radius: 40px;
+            position: relative;
+        }
+
+        .person::before {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            top: 20px;
+            left: 20px;
+        }
+
+        .person::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 30px;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            bottom: 20px;
+            left: 10px;
+        }
+
+        .connection-line {
+            flex: 1;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--primary-blue), transparent);
+            margin: 0 10px;
+            position: relative;
+        }
+
+        .connection-dots {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .connection-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-teal);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .connection-dot:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .connection-dot:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        /* Screen 2 Illustration - Kanban Board */
+        .kanban-illustration {
+            display: flex;
+            gap: 12px;
+            height: 100%;
+            align-items: flex-start;
+        }
+
+        .kanban-column {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 12px 8px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .column-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .task-card {
+            background: white;
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-title {
+            height: 4px;
+            background: var(--primary-blue);
+            border-radius: 2px;
+            margin-bottom: 4px;
+        }
+
+        .task-meta {
+            height: 2px;
+            background: var(--text-secondary);
+            border-radius: 1px;
+            opacity: 0.5;
+        }
+
+        /* Screen 3 Illustration - Mentor Guidance */
+        .mentor-illustration {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+        }
+
+        .mentor-person {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--accent-teal), #059669);
+            border-radius: 50%;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .mentor-person::before {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            top: 20px;
+            left: 30px;
+        }
+
+        .mentor-person::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 20px;
+            background: white;
+            border-radius: 10px 10px 0 0;
+            bottom: 20px;
+            left: 20px;
+        }
+
+        .webinar-ui {
+            width: 200px;
+            height: 120px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-medium);
+            padding: 12px;
+            position: relative;
+        }
+
+        .webinar-header {
+            height: 4px;
+            background: var(--primary-indigo);
+            border-radius: 2px;
+            margin-bottom: 8px;
+        }
+
+        .webinar-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .participant {
+            height: 20px;
+            background: rgba(37, 99, 235, 0.1);
+            border-radius: 4px;
+        }
+
+        /* === ANIMATIONS === */
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide.active {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* === RESPONSIVE DESIGN === */
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.5rem;
+            }
+            
+            .subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .illustration {
+                height: 240px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .illustration-container {
+                max-width: 400px;
+            }
+            
+            .text-content {
+                max-width: 400px;
+            }
+            
+            .button-container {
+                max-width: 400px;
+            }
+        }
+
+        /* === DARK MODE SUPPORT === */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-primary: #f1f5f9;
+                --text-secondary: #94a3b8;
+                --background-light: #0f172a;
+                --surface-white: rgba(30, 41, 59, 0.8);
+            }
+            
+            body {
+                background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="onboarding-container">
+        <!-- Progress Indicator -->
+        <div class="progress-container">
+            <div class="progress-dots">
+                <div class="dot active" data-slide="0"></div>
+                <div class="dot" data-slide="1"></div>
+                <div class="dot" data-slide="2"></div>
+            </div>
+        </div>
+
+        <!-- Slides Container -->
+        <div class="slides-container" id="slidesContainer">
+            <!-- Screen 1: Terhubung dengan Pengusaha Indonesia -->
+            <div class="slide active">
+                <div class="illustration-container">
+                    <div class="illustration">
+                        <div class="connection-illustration">
+                            <div class="person"></div>
+                            <div class="connection-line">
+                                <div class="connection-dots">
+                                    <div class="connection-dot"></div>
+                                    <div class="connection-dot"></div>
+                                    <div class="connection-dot"></div>
+                                </div>
+                            </div>
+                            <div class="person"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-content">
+                    <h1 class="title">Terhubung dengan Pengusaha Indonesia</h1>
+                    <p class="subtitle">Bangun relasi, diskusi, dan peluang bisnis di komunitas Foundra.</p>
+                </div>
+                
+                <div class="button-container">
+                    <button class="primary-button" onclick="nextSlide()">Lanjut</button>
+                </div>
+            </div>
+
+            <!-- Screen 2: Kolaborasi Proyek Lebih Mudah -->
+            <div class="slide">
+                <div class="illustration-container">
+                    <div class="illustration">
+                        <div class="kanban-illustration">
+                            <div class="kanban-column">
+                                <div class="column-title">To Do</div>
+                                <div class="task-card">
+                                    <div class="task-title"></div>
+                                    <div class="task-meta"></div>
+                                </div>
+                                <div class="task-card">
+                                    <div class="task-title" style="width: 80%"></div>
+                                    <div class="task-meta" style="width: 60%"></div>
+                                </div>
+                            </div>
+                            <div class="kanban-column">
+                                <div class="column-title">In Progress</div>
+                                <div class="task-card">
+                                    <div class="task-title" style="width: 90%"></div>
+                                    <div class="task-meta" style="width: 70%"></div>
+                                </div>
+                            </div>
+                            <div class="kanban-column">
+                                <div class="column-title">Done</div>
+                                <div class="task-card">
+                                    <div class="task-title" style="width: 100%"></div>
+                                    <div class="task-meta" style="width: 80%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-content">
+                    <h1 class="title">Kolaborasi Proyek Lebih Mudah</h1>
+                    <p class="subtitle">Buat project, undang anggota tim, dan kelola tugas bersama.</p>
+                </div>
+                
+                <div class="button-container">
+                    <button class="primary-button" onclick="nextSlide()">Lanjut</button>
+                </div>
+            </div>
+
+            <!-- Screen 3: Dapatkan Mentor & Ikuti Event -->
+            <div class="slide">
+                <div class="illustration-container">
+                    <div class="illustration">
+                        <div class="mentor-illustration">
+                            <div class="mentor-person"></div>
+                            <div class="webinar-ui">
+                                <div class="webinar-header"></div>
+                                <div class="webinar-content">
+                                    <div class="participant"></div>
+                                    <div class="participant"></div>
+                                    <div class="participant"></div>
+                                    <div class="participant"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-content">
+                    <h1 class="title">Dapatkan Mentor & Ikuti Event</h1>
+                    <p class="subtitle">Akses mentor bisnis, workshop, dan event dari komunitas.</p>
+                </div>
+                
+                <div class="button-container">
+                    <button class="primary-button" onclick="startApp()">Mulai Sekarang</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 3;
+        const slidesContainer = document.getElementById('slidesContainer');
+        const dots = document.querySelectorAll('.dot');
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        function updateSlide() {
+            // Update slides container position
+            slidesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Update progress dots
+            dots.forEach((dot, index) => {
+                if (index === currentSlide) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+            
+            // Update slides active state
+            document.querySelectorAll('.slide').forEach((slide, index) => {
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+        }
+
+        function startApp() {
+            // Simulasi redirect ke aplikasi utama
+            alert('Selamat datang di Foundra! Aplikasi akan dimulai...');
+            window.location.href ="login.html"
+        }
+
+        // Tambahkan swipe functionality untuk mobile
+        let startX = 0;
+        let endX = 0;
+
+        slidesContainer.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+        });
+
+        slidesContainer.addEventListener('touchend', (e) => {
+            endX = e.changedTouches[0].clientX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const diff = startX - endX;
+            
+            if (Math.abs(diff) > 50) { // Minimum swipe distance
+                if (diff > 0) {
+                    nextSlide(); // Swipe kiri
+                } else {
+                    prevSlide(); // Swipe kanan
+                }
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+    </script>
+</body>
+</html>

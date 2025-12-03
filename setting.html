@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaturan - Foundra</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f8fafc;
+            --surface: #1e293b;
+            --surface-dark: #0f172a;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --radius: 12px;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--surface-dark), #1a202c);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .settings-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .settings-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+        }
+
+        .settings-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .settings-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .settings-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border);
+        }
+
+        .settings-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 12px;
+            margin-right: 16px;
+            font-size: 1.2rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .settings-list {
+            list-style: none;
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding-left: 12px;
+            padding-right: 12px;
+            margin: 0 -12px;
+        }
+
+        .item-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 8px;
+            margin-right: 12px;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .item-content {
+            flex: 1;
+        }
+
+        .item-title {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .item-description {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .item-action {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Toggle Switch */
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border);
+            transition: var(--transition);
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Badge */
+        .badge {
+            background: var(--primary);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        /* Danger Zone */
+        .danger-zone {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .danger-zone::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--danger), #dc2626);
+        }
+
+        .danger-item {
+            color: var(--danger);
+        }
+
+        .danger-item .item-icon {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        /* Profile Section */
+        .profile-section {
+            display: flex;
+            align-items: center;
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-right: 20px;
+            color: white;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .profile-email {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .profile-status {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .profile-status::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .action-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid var(--border);
+        }
+
+        .action-card:hover {
+            transform: translateY(-3px);
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--primary);
+        }
+
+        .action-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 12px;
+            margin: 0 auto 12px;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .action-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .action-description {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        .settings-footer {
+            text-align: center;
+            padding: 20px 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .profile-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-avatar {
+                margin-right: 0;
+                margin-bottom: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .settings-title {
+                font-size: 2rem;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .settings-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <div class="settings-header">
+            <a href="homepage.html" style="position: absolute; top: 20px; left: 20px; color: var(--text-primary); font-size: 1.5rem; text-decoration: none;">
+                <i class="fas fa-arrow-left"></i> Home
+            </a>
+            <h1 class="settings-title">Pengaturan</h1>
+            <p class="settings-subtitle">Kelola akun dan preferensi Anda</p>
+        </div>
+
+        <!-- Profile Section -->
+        <div class="profile-section">
+            <a href="profile.html" style="text-decoration: none; color: inherit; display: block;">
+            <div class="profile-section" style="cursor: pointer;">
+            <div class="profile-avatar">
+                <span>AR</span>
+            </div>
+            <div class="profile-info">
+                <h2 class="profile-name">Ahmad Rizki</h2>
+                <p class="profile-email">ahmad.rizki@foundra.com</p>
+                <span class="profile-status">Akun Terverifikasi</span>
+            </div>
+            <div style="margin-left: auto; font-size: 1.2rem; color: var(--text-muted);">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <div class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-user-edit"></i>
+                </div>
+                <div class="action-title">Edit Profil</div>
+                <div class="action-description">Perbarui informasi</div>
+            </div>
+            <div class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="action-title">Keamanan</div>
+                <div class="action-description">Perbarui kata sandi</div>
+            </div>
+            <div class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-palette"></i>
+                </div>
+                <div class="action-title">Tampilan</div>
+                <div class="action-description">Ubah tema</div>
+            </div>
+            <div class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div class="action-title">Notifikasi</div>
+                <div class="action-description">Atur pemberitahuan</div>
+            </div>
+        </div>
+
+        <!-- Settings Grid -->
+        <div class="settings-grid">
+            <!-- Account Settings -->
+            <div class="settings-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+                    <h2 class="card-title">Akun</h2>
+                </div>
+                <ul class="settings-list">
+                    <li class="settings-item">
+                        <div class="item-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">Informasi Profil</div>
+                            <div class="item-description">Kelola data pribadi Anda</div>
+                        </div>
+                        <div class="item-action">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </li>
+                    <li class="settings-item">
+                        <div class="item-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">Email & Telepon</div>
+                            <div class="item-description">Ubah informasi kontak</div>
+                        </div>
+                        <div class="item-action">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </li>
+                    <li class="settings-item">
+                        <div class="item-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">Bahasa</div>
+                            <div class="item-description">Bahasa Indonesia</div>
+                        </div>
+                        <div class="item-action">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Security Settings -->
+            <div class="settings-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h2 class="card-title">Keamanan</h2>
+                </div>
+                <ul class="settings-list">
+                    <li class="settings-item">
+                        <div class="item-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">Kata Sandi</div>
+                            <div class="item-description">Terakhir diubah 3 bulan lalu</div>
+                        </div>
+                        <div class="item-action">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </li>
+                    <li class="settings-item">
+                        <div class="item-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">Verifikasi 2-Faktor</div>
+                            <div class="item-description">Aktifkan untuk keamanan ekstra</div>
+                        </div>
+                        <div class="item-action">
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </li>
+                    <li class="settings-item">
+                        <div class="item-icon">
+                            <i class="fas fa-devices"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">Perangkat Terhubung</div>
+                            <div class="item-description">3 perangkat aktif</div>
+                        </div>
+                        <div class="item-action">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Notifications -->
+            <div class="settings-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h2 class="card-title">Notifikasi</h2>
+                </div>
+                <ul class="settings-list">
+                    <li class="settings-item">
+                        <div class="item-icon">
+                            <i class="fas fa-comment-alt"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">Pesan</div>
+                            <div class="item-description">Notifikasi pesan baru</div>
+                        </div>
+                        <div class="item-action">
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </li>
+                    <li class="settings-item">
+                        <div class="item-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">Pengingat</div>
+                            <div class="item-description">Pengingat jadwal meeting</div>
+                        </div>
+                        <div class="item-action">
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </li>
+                    <li class="settings-item">
+                        <div class="item-icon">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">Promo & Penawaran</div>
+                            <div class="item-description">Informasi promo terbaru</div>
+                        </div>
+                        <div class="item-action">
+                            <label class="toggle">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Privacy -->
+            <div class="settings-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-user-secret"></i>
+                    </div>
+                    <h2 class="card-title">Privasi</h2>
+                </div>
+                <ul class="settings-list">
+                    <li class="settings-item">
+                        <div class="item-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">Visibilitas Profil</div>
+                            <div class="item-description">Siapa yang dapat melihat profil Anda</div>
+                        </div>
+                        <div class="item-action">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </li>
+                    <li class="settings-item">
+                        <div class="item-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">Data & Penyimpanan</div>
+                            <div class="item-description">Kelola data aplikasi</div>
+                        </div>
+                        <div class="item-action">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </li>
+                    <li class="settings-item">
+                        <div class="item-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">Riwayat Aktivitas</div>
+                            <div class="item-description">Lihat aktivitas akun</div>
+                        </div>
+                        <div class="item-action">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="settings-card danger-zone">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h2 class="card-title">Zona Berbahaya</h2>
+                </div>
+                <ul class="settings-list">
+                    <li class="settings-item danger-item">
+                        <div class="item-icon">
+                            <i class="fas fa-ban"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">Nonaktifkan Akun</div>
+                            <div class="item-description">Sembunyikan akun sementara</div>
+                        </div>
+                        <div class="item-action">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </li>
+                    <li class="settings-item danger-item">
+                        <div class="item-icon">
+                            <i class="fas fa-trash-alt"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">Hapus Akun</div>
+                            <div class="item-description">Hapus permanen akun dan data</div>
+                        </div>
+                        <div class="item-action">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Support -->
+            <div class="settings-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h2 class="card-title">Bantuan & Dukungan</h2>
+                </div>
+                <ul class="settings-list">
+                    <li class="settings-item">
+                        <div class="item-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">Pusat Bantuan</div>
+                            <div class="item-description">Temukan jawaban Anda</div>
+                        </div>
+                        <div class="item-action">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </li>
+                    <li class="settings-item">
+                        <div class="item-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">Hubungi Kami</div>
+                            <div class="item-description">Butuh bantuan? Hubungi kami</div>
+                        </div>
+                        <div class="item-action">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </li>
+                    <li class="settings-item">
+                        <div class="item-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">Beri Rating</div>
+                            <div class="item-description">Beri nilai aplikasi kami</div>
+                        </div>
+                        <div class="item-action">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="settings-footer">
+            <p>Foundra App v2.4.1 • © 2024 Foundra. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        // Add interactivity to settings items
+        document.addEventListener('DOMContentLoaded', function() {
+            const settingsItems = document.querySelectorAll('.settings-item');
+            
+            settingsItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Add ripple effect
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = event.clientX - rect.left - size / 2;
+                    const y = event.clientY - rect.top - size / 2;
+                    
+                    ripple.style.cssText = `
+                        position: absolute;
+                        border-radius: 50%;
+                        background: rgba(255, 255, 255, 0.3);
+                        transform: scale(0);
+                        animation: ripple 0.6s linear;
+                        width: ${size}px;
+                        height: ${size}px;
+                        left: ${x}px;
+                        top: ${y}px;
+                    `;
+                    
+                    this.style.position = 'relative';
+                    this.style.overflow = 'hidden';
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                    
+                    // Simulate navigation (in real app, this would navigate to the setting)
+                    const title = this.querySelector('.item-title').textContent;
+                    console.log(`Navigating to: ${title}`);
+                });
+            });
+
+            // Toggle switch functionality
+            const toggles = document.querySelectorAll('.toggle input');
+            toggles.forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    const setting = this.closest('.settings-item').querySelector('.item-title').textContent;
+                    const state = this.checked ? 'diaktifkan' : 'dinonaktifkan';
+                    console.log(`${setting} ${state}`);
+                });
+            });
+
+            // Add CSS for ripple animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes ripple {
+                    to {
+                        transform: scale(4);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>

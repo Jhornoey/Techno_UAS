@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum Komunitas - Foundra</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #a5b4fc;
+            --secondary: #f8fafc;
+            --surface: #ffffff;
+            --surface-dark: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dark-mode {
+            --surface: #1e293b;
+            --surface-dark: #0f172a;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --secondary: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--surface-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: var(--surface);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 16px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            margin-right: 8px;
+            font-size: 1.8rem;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 24px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background-color: var(--surface-dark);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background-color: var(--surface-dark);
+            color: var(--primary);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background-color: var(--danger);
+            border-radius: 50%;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Category Tabs */
+        .category-section {
+            background-color: var(--surface);
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 72px;
+            z-index: 90;
+        }
+
+        .category-tabs {
+            display: flex;
+            overflow-x: auto;
+            gap: 8px;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-tab {
+            padding: 10px 16px;
+            background-color: var(--surface-dark);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .category-tab:hover {
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .category-tab.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 24px;
+            padding: 24px 0;
+        }
+
+        /* Feed Section */
+        .feed-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .post-card {
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .post-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .post-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .post-user-info {
+            flex: 1;
+        }
+
+        .post-user-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .post-user-role {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .post-category {
+            background-color: var(--surface-dark);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .post-content {
+            margin-bottom: 16px;
+        }
+
+        .post-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .post-preview {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .post-image {
+            width: 100%;
+            border-radius: var(--radius-sm);
+            margin-bottom: 12px;
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .post-tag {
+            background-color: var(--surface-dark);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border);
+            padding-top: 16px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 6px 0;
+        }
+
+        .action-btn:hover {
+            color: var(--primary);
+        }
+
+        .action-btn.active {
+            color: var(--primary);
+        }
+
+        .action-btn.liked {
+            color: var(--danger);
+        }
+
+        .action-btn.saved {
+            color: var(--warning);
+        }
+
+        .share-options {
+            position: relative;
+        }
+
+        .share-menu {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            padding: 8px;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 150px;
+            z-index: 10;
+        }
+
+        .share-options:hover .share-menu {
+            display: flex;
+        }
+
+        .share-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .share-option:hover {
+            background-color: var(--surface-dark);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-card {
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: between;
+        }
+
+        .sidebar-title span {
+            color: var(--primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .user-list, .post-list, .event-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .user-item, .post-item, .event-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        .user-avatar-sm {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .follow-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .follow-btn:hover {
+            background: var(--primary-dark);
+        }
+
+         /* Footer Navigation */
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .nav-tabs {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 0;
+            text-decoration: none;
+            color: var(--text-light);
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab.active {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+
+        .post-item {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        .post-item:last-child {
+            border-bottom: none;
+        }
+
+        .post-title-sm {
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+
+        .post-meta-sm {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .event-date {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .event-day {
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .event-month {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+
+        .event-info {
+            flex: 1;
+        }
+
+        .event-title {
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+
+        .event-details {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 100;
+        }
+
+        .fab:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalAppear 0.3s ease-out;
+        }
+
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background-color: var(--surface);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background-color: var(--surface);
+        }
+
+        .tag {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background-color: var(--surface-dark);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .tag-remove {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .tag-input-field {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .image-upload {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-sm);
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .image-upload:hover {
+            border-color: var(--primary);
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .upload-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--surface-dark);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        /* Skeleton Loading */
+        .skeleton {
+            background: linear-gradient(90deg, var(--surface-dark) 25%, var(--border) 50%, var(--surface-dark) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .skeleton-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+        }
+
+        .skeleton-text {
+            height: 12px;
+            margin-bottom: 8px;
+        }
+
+        .skeleton-text-sm {
+            height: 10px;
+            width: 60%;
+        }
+
+        .skeleton-image {
+            height: 200px;
+            width: 100%;
+            border-radius: var(--radius-sm);
+            margin-bottom: 12px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .empty-description {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-wrap: wrap;
+            }
+            
+            .search-bar {
+                order: 3;
+                margin: 16px 0 0;
+                max-width: 100%;
+            }
+            
+            .category-section {
+                top: 112px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 12px;
+            }
+            
+            .post-card {
+                padding: 16px;
+            }
+            
+            .action-buttons {
+                gap: 12px;
+            }
+            
+            .action-btn span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="homepage.html" class="logo">
+                    <i class="fas fa-rocket logo-icon"></i>
+                    Foundra
+                </a>
+                
+                <div class="search-bar">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Cari diskusi, topik, atau pengguna...">
+                </div>
+                
+                <div class="header-actions">
+                    <button class="icon-btn">
+                        <i class="far fa-bell"></i>
+                        <span class="notification-badge"></span>
+                    </button>
+                    <div class="user-avatar">AR</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Category Tabs -->
+    <section class="category-section">
+        <div class="container">
+            <div class="category-tabs">
+                <div class="category-tab active">Semua</div>
+                <div class="category-tab">Startup</div>
+                <div class="category-tab">UMKM</div>
+                <div class="category-tab">Investasi</div>
+                <div class="category-tab">Digital Marketing</div>
+                <div class="category-tab">Teknologi</div>
+                <div class="category-tab">Freelance</div>
+                <div class="category-tab">Tips Bisnis</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="main-content">
+            <!-- Feed Section -->
+            <section class="feed-section">
+                <!-- Post Card 1 -->
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="post-avatar">RS</div>
+                        <div class="post-user-info">
+                            <div class="post-user-name">Rina Santoso</div>
+                            <div class="post-user-role">Founder @TokoCraft</div>
+                            <div class="post-meta">
+                                <span>2 jam lalu</span>
+                                <span class="post-category">UMKM</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="post-content">
+                        <h3 class="post-title">Strategi Meningkatkan Penjualan Online untuk UMKM</h3>
+                        <p class="post-preview">Baru saja menyelesaikan webinar tentang digital marketing untuk UMKM dan ingin berbagi insight. Fokus pada konten yang konsisten di media sosial ternyata meningkatkan engagement hingga 300% dalam 3 bulan...</p>
+                        <div class="post-tags">
+                            <span class="post-tag">#digitalmarketing</span>
+                            <span class="post-tag">#UMKM</span>
+                            <span class="post-tag">#bisnisonline</span>
+                        </div>
+                    </div>
+                    
+                    <div class="post-actions">
+                        <div class="action-buttons">
+                            <button class="action-btn">
+                                <i class="far fa-heart"></i>
+                                <span>24</span>
+                            </button>
+                            <button class="action-btn">
+                                <i class="far fa-comment"></i>
+                                <span>8</span>
+                            </button>
+                            <button class="action-btn">
+                                <i class="far fa-bookmark"></i>
+                                <span>Simpan</span>
+                            </button>
+                        </div>
+                        <div class="share-options">
+                            <button class="action-btn">
+                                <i class="fas fa-share"></i>
+                                <span>Bagikan</span>
+                            </button>
+                            <div class="share-menu">
+                                <div class="share-option">
+                                    <i class="fab fa-linkedin"></i>
+                                    <span>LinkedIn</span>
+                                </div>
+                                <div class="share-option">
+                                    <i class="fab fa-twitter"></i>
+                                    <span>Twitter</span>
+                                </div>
+                                <div class="share-option">
+                                    <i class="fab fa-whatsapp"></i>
+                                    <span>WhatsApp</span>
+                                </div>
+                                <div class="share-option">
+                                    <i class="fas fa-link"></i>
+                                    <span>Salin Tautan</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post Card 2 -->
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="post-avatar">DA</div>
+                        <div class="post-user-info">
+                            <div class="post-user-name">Dian Aditya</div>
+                            <div class="post-user-role">Tech Startup Founder</div>
+                            <div class="post-meta">
+                                <span>5 jam lalu</span>
+                                <span class="post-category">Startup</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="post-content">
+                        <h3 class="post-title">Pentingnya MVP dalam Pengembangan Startup</h3>
+                        <p class="post-preview">Banyak founder terjebak membuat produk yang sempurna sejak awal. Padahal, MVP (Minimum Viable Product) adalah kunci untuk menguji pasar dengan cepat dan murah. Berikut pengalaman saya membangun MVP untuk startup fintech...</p>
+                        <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Startup Team" class="post-image">
+                        <div class="post-tags">
+                            <span class="post-tag">#startup</span>
+                            <span class="post-tag">#teknologi</span>
+                            <span class="post-tag">#MVP</span>
+                        </div>
+                    </div>
+                    
+                    <div class="post-actions">
+                        <div class="action-buttons">
+                            <button class="action-btn liked">
+                                <i class="fas fa-heart"></i>
+                                <span>42</span>
+                            </button>
+                            <button class="action-btn">
+                                <i class="far fa-comment"></i>
+                                <span>15</span>
+                            </button>
+                            <button class="action-btn saved">
+                                <i class="fas fa-bookmark"></i>
+                                <span>Disimpan</span>
+                            </button>
+                        </div>
+                        <div class="share-options">
+                            <button class="action-btn">
+                                <i class="fas fa-share"></i>
+                                <span>Bagikan</span>
+                            </button>
+                            <div class="share-menu">
+                                <div class="share-option">
+                                    <i class="fab fa-linkedin"></i>
+                                    <span>LinkedIn</span>
+                                </div>
+                                <div class="share-option">
+                                    <i class="fab fa-twitter"></i>
+                                    <span>Twitter</span>
+                                </div>
+                                <div class="share-option">
+                                    <i class="fab fa-whatsapp"></i>
+                                    <span>WhatsApp</span>
+                                </div>
+                                <div class="share-option">
+                                    <i class="fas fa-link"></i>
+                                    <span>Salin Tautan</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skeleton Loading (Example) -->
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="skeleton skeleton-avatar"></div>
+                        <div class="post-user-info" style="flex: 1;">
+                            <div class="skeleton skeleton-text" style="width: 60%;"></div>
+                            <div class="skeleton skeleton-text" style="width: 40%;"></div>
+                            <div class="skeleton skeleton-text" style="width: 30%; height: 10px;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="post-content">
+                        <div class="skeleton skeleton-text"></div>
+                        <div class="skeleton skeleton-text"></div>
+                        <div class="skeleton skeleton-text" style="width: 80%;"></div>
+                        <div class="skeleton skeleton-image"></div>
+                        <div style="display: flex; gap: 8px; margin-top: 12px;">
+                            <div class="skeleton" style="width: 80px; height: 24px; border-radius: 12px;"></div>
+                            <div class="skeleton" style="width: 60px; height: 24px; border-radius: 12px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <!-- Recommended Users -->
+                <div class="sidebar-card">
+                    <div class="sidebar-title">
+                        Rekomendasi Pengguna
+                        <span>Lihat Semua</span>
+                    </div>
+                    <div class="user-list">
+                        <div class="user-item">
+                            <div class="user-avatar-sm">AS</div>
+                            <div class="user-info">
+                                <div class="user-name">Ahmad Surya</div>
+                                <div class="user-role">Investor</div>
+                            </div>
+                            <button class="follow-btn">Ikuti</button>
+                        </div>
+                        <div class="user-item">
+                            <div class="user-avatar-sm">MI</div>
+                            <div class="user-info">
+                                <div class="user-name">Maya Indah</div>
+                                <div class="user-role">Digital Marketer</div>
+                            </div>
+                            <button class="follow-btn">Ikuti</button>
+                        </div>
+                        <div class="user-item">
+                            <div class="user-avatar-sm">RS</div>
+                            <div class="user-info">
+                                <div class="user-name">Rizky Saputra</div>
+                                <div class="user-role">Freelancer</div>
+                            </div>
+                            <button class="follow-btn">Ikuti</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Popular Posts -->
+                <div class="sidebar-card">
+                    <div class="sidebar-title">
+                        Post Populer
+                        <span>Lihat Semua</span>
+                    </div>
+                    <div class="post-list">
+                        <div class="post-item">
+                            <div class="post-title-sm">Cara Mencapai Profit dalam 6 Bulan</div>
+                            <div class="post-meta-sm">
+                                <span>120 suka</span>
+                                <span>•</span>
+                                <span>45 komentar</span>
+                            </div>
+                        </div>
+                        <div class="post-item">
+                            <div class="post-title-sm">Tools Gratis untuk Analisis Pasar</div>
+                            <div class="post-meta-sm">
+                                <span>98 suka</span>
+                                <span>•</span>
+                                <span>32 komentar</span>
+                            </div>
+                        </div>
+                        <div class="post-item">
+                            <div class="post-title-sm">Kisah Sukses UMKM Naik Kelas</div>
+                            <div class="post-meta-sm">
+                                <span>76 suka</span>
+                                <span>•</span>
+                                <span>28 komentar</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Events -->
+                <div class="sidebar-card">
+                    <div class="sidebar-title">
+                        Event Mendatang
+                        <span>Lihat Semua</span>
+                    </div>
+                    <div class="event-list">
+                        <div class="event-item">
+                            <div class="event-date">
+                                <div class="event-day">15</div>
+                                <div class="event-month">Jun</div>
+                            </div>
+                            <div class="event-info">
+                                <div class="event-title">Webinar: Funding untuk Startup</div>
+                                <div class="event-details">Online • 14:00 WIB</div>
+                            </div>
+                        </div>
+                        <div class="event-item">
+                            <div class="event-date">
+                                <div class="event-day">22</div>
+                                <div class="event-month">Jun</div>
+                            </div>
+                            <div class="event-info">
+                                <div class="event-title">Networking UMKM Jakarta</div>
+                                <div class="event-details">Jakarta • 09:00 WIB</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Floating Action Button -->
+    <button class="fab" id="createPostBtn">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Create Post Modal -->
+    <div class="modal" id="createPostModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Buat Post Baru</h2>
+                <button class="close-btn" id="closeCreatePostModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="postTitle">Judul</label>
+                    <input type="text" id="postTitle" class="form-input" placeholder="Judul post Anda...">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="postCategory">Kategori</label>
+                    <select id="postCategory" class="form-select">
+                        <option value="">Pilih kategori</option>
+                        <option value="startup">Startup</option>
+                        <option value="umkm">UMKM</option>
+                        <option value="investasi">Investasi</option>
+                        <option value="digital-marketing">Digital Marketing</option>
+                        <option value="teknologi">Teknologi</option>
+                        <option value="freelance">Freelance</option>
+                        <option value="tips-bisnis">Tips Bisnis</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="postContent">Konten</label>
+                    <textarea id="postContent" class="form-textarea" placeholder="Tulis konten post Anda di sini..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Gambar (Opsional)</label>
+                    <div class="image-upload">
+                        <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                        <div class="upload-text">Klik untuk mengunggah gambar</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tag</label>
+                    <div class="tag-input">
+                        <div class="tag">
+                            #bisnis
+                            <button class="tag-remove">&times;</button>
+                        </div>
+                        <input type="text" class="tag-input-field" placeholder="Tambahkan tag...">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelPost">Batal</button>
+                <button class="btn btn-primary" id="publishPost">Terbitkan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Post Detail Modal -->
+    <div class="modal" id="postDetailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Detail Post</h2>
+                <button class="close-btn" id="closePostDetailModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Post content would be loaded here dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State (hidden by default) -->
+    <div class="empty-state" style="display: none;">
+        <i class="fas fa-comments empty-icon"></i>
+        <h2 class="empty-title">Belum ada diskusi</h2>
+        <p class="empty-description">Mulai percakapan pertama Anda dan berbagi wawasan bisnis dengan komunitas pengusaha Indonesia.</p>
+        <button class="btn btn-primary" id="createFirstPost">Buat Post Pertama</button>
+    </div>
+<!-- Footer Navigation -->
+    <div class="footer-nav">
+        <div class="nav-tabs">
+            <a href="homepage.html" class="nav-tab">
+                <i class="fas fa-home nav-icon"></i>
+                <span>Home</span> 
+            </a>
+            <a href="forum.html" class="nav-tab active">
+                <i class="fas fa-users nav-icon"></i>
+                <span>Forum</span>
+            </a>
+            <a href="partner.html" class="nav-tab">
+                <i class="fas fa-handshake nav-icon"></i>
+                <span>Partner</span>
+            </a>
+            <a href="event.html" class="nav-tab">
+                <i class="fas fa-calendar-alt nav-icon"></i>
+                <span>Event</span>
+            </a>
+            <a href="profile.html" class="nav-tab">
+                <i class="fas fa-user nav-icon"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal elements
+            const createPostModal = document.getElementById('createPostModal');
+            const postDetailModal = document.getElementById('postDetailModal');
+            const createPostBtn = document.getElementById('createPostBtn');
+            const closeCreatePostModal = document.getElementById('closeCreatePostModal');
+            const closePostDetailModal = document.getElementById('closePostDetailModal');
+            const cancelPost = document.getElementById('cancelPost');
+            const publishPost = document.getElementById('publishPost');
+            const createFirstPost = document.getElementById('createFirstPost');
+            
+            // Open create post modal
+            createPostBtn.addEventListener('click', function() {
+                createPostModal.style.display = 'flex';
+            });
+            
+            createFirstPost.addEventListener('click', function() {
+                createPostModal.style.display = 'flex';
+            });
+            
+            // Close modals
+            function closeModals() {
+                createPostModal.style.display = 'none';
+                postDetailModal.style.display = 'none';
+            }
+            
+            closeCreatePostModal.addEventListener('click', closeModals);
+            closePostDetailModal.addEventListener('click', closeModals);
+            cancelPost.addEventListener('click', closeModals);
+            
+            // Publish post
+            publishPost.addEventListener('click', function() {
+                const title = document.getElementById('postTitle').value;
+                const category = document.getElementById('postCategory').value;
+                
+                if (!title || !category) {
+                    alert('Judul dan kategori harus diisi!');
+                    return;
+                }
+                
+                alert('Post berhasil diterbitkan!');
+                closeModals();
+                
+                // Reset form
+                document.getElementById('postTitle').value = '';
+                document.getElementById('postCategory').value = '';
+                document.getElementById('postContent').value = '';
+            });
+            
+            // Category tabs
+            const categoryTabs = document.querySelectorAll('.category-tab');
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // In a real app, this would filter posts by category
+                    console.log(`Filter posts by category: ${this.textContent}`);
+                });
+            });
+            
+            // Like buttons
+            const likeButtons = document.querySelectorAll('.action-btn .fa-heart').forEach(icon => {
+                icon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const btn = this.closest('.action-btn');
+                    const count = btn.querySelector('span');
+                    
+                    if (btn.classList.contains('liked')) {
+                        btn.classList.remove('liked');
+                        this.classList.remove('fas');
+                        this.classList.add('far');
+                        count.textContent = parseInt(count.textContent) - 1;
+                    } else {
+                        btn.classList.add('liked');
+                        this.classList.remove('far');
+                        this.classList.add('fas');
+                        count.textContent = parseInt(count.textContent) + 1;
+                    }
+                });
+            });
+            
+            // Save buttons
+            const saveButtons = document.querySelectorAll('.action-btn .fa-bookmark').forEach(icon => {
+                icon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const btn = this.closest('.action-btn');
+                    
+                    if (btn.classList.contains('saved')) {
+                        btn.classList.remove('saved');
+                        this.classList.remove('fas');
+                        this.classList.add('far');
+                        btn.querySelector('span').textContent = 'Simpan';
+                    } else {
+                        btn.classList.add('saved');
+                        this.classList.remove('far');
+                        this.classList.add('fas');
+                        btn.querySelector('span').textContent = 'Disimpan';
+                    }
+                });
+            });
+            
+            // Post cards click to open detail
+            const postCards = document.querySelectorAll('.post-card');
+            postCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // In a real app, this would load the post content
+                    postDetailModal.style.display = 'flex';
+                });
+            });
+            
+            // Follow buttons
+            const followButtons = document.querySelectorAll('.follow-btn');
+            followButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (this.textContent === 'Ikuti') {
+                        this.textContent = 'Mengikuti';
+                        this.style.background = 'var(--surface-dark)';
+                        this.style.color = 'var(--text-primary)';
+                        this.style.border = '1px solid var(--border)';
+                    } else {
+                        this.textContent = 'Ikuti';
+                        this.style.background = 'var(--primary)';
+                        this.style.color = 'white';
+                        this.style.border = 'none';
+                    }
+                });
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === createPostModal) {
+                    closeModals();
+                }
+                if (event.target === postDetailModal) {
+                    closeModals();
+                }
+            });
+        });
+    </script>
+     
+
+</body>
+</html>
